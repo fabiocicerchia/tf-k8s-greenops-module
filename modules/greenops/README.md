@@ -1,6 +1,6 @@
 # GreenOps Module
 
-Comprehensive Terraform module for deploying a complete green operations monitoring stack on Kubernetes. Includes Prometheus, KEDA, OpenCost, Kepler Operator, and Scaphandre with individual toggles for selective component deployment.
+Comprehensive Terraform module for deploying a complete green operations monitoring stack on Kubernetes. Includes Prometheus, KEDA, OpenCost, Kepler Operator, Scaphandre, and KubeGreen with individual toggles for selective component deployment.
 
 ## Features
 
@@ -10,6 +10,7 @@ Comprehensive Terraform module for deploying a complete green operations monitor
 - **OpenCost**: Cloud cost monitoring and allocation with carbon tracking
 - **Kepler Operator**: Environmental impact and power consumption tracking
 - **Scaphandre**: Container-level power consumption monitoring
+- **KubeGreen**: Automated resource cleanup and pod hibernation
 - **Flexible Configuration**: Customize each component independently with HCL values
 
 ## Requirements
@@ -174,6 +175,16 @@ scaphandre = {
 }
 ```
 
+#### kubegreen
+```hcl
+kubegreen = {
+  enabled      = bool                    # Enable KubeGreen (default: false)
+  release_name = string                  # Helm release name (default: "kube-green")
+  namespace    = string                  # Kubernetes namespace (default: "kube-green")
+  values       = any                     # Helm chart values (default: {})
+}
+```
+
 ## Outputs
 
 The module provides outputs organized in nested objects for better structure:
@@ -299,6 +310,10 @@ module "greenops" {
 
   scaphandre = {
     enabled = true  # Enable for container-level power monitoring
+  }
+
+  kubegreen = {
+    enabled = true  # Enable for resource cleanup and pod hibernation
   }
 }
 

@@ -42,6 +42,17 @@ output "scaphandre" {
     version      = module.greenops.scaphandre.version
   }
 }
+
+output "kubegreen" {
+  description = "KubeGreen module outputs"
+  value = module.greenops.kubegreen == null ? null : {
+    namespace    = module.greenops.kubegreen.namespace
+    release_name = module.greenops.kubegreen.release_name
+    version      = module.greenops.kubegreen.version
+  }
+}
+
+output "deployed_components" {
   description = "Map of deployed components and their status"
   value       = module.greenops.deployed_components
 }

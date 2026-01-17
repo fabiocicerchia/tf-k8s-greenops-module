@@ -11,6 +11,7 @@ The GreenOps Module provides a unified way to deploy and manage:
 - **OpenCost** - Cost monitoring and allocation with carbon cost tracking
 - **Kepler** - Environmental impact tracking via the Kepler Operator with optional power monitoring
 - **Scaphandre** - Container-level power consumption monitoring
+- **KubeGreen** - Automated resource cleanup and pod hibernation for cost optimization
 
 All components are optional and can be selectively deployed based on your requirements.
 
@@ -230,6 +231,17 @@ scaphandre = {
 ```
 Access via: `module.greenops.scaphandre.namespace`
 
+### kubegreen
+KubeGreen deployment information (if enabled):
+```hcl
+kubegreen = {
+  namespace    = string  # Kubernetes namespace
+  release_name = string  # Helm release name
+  version      = string  # Chart version
+}
+```
+Access via: `module.greenops.kubegreen.namespace`
+
 ### deployed_components
 Status of all deployed components:
 ```hcl
@@ -239,6 +251,7 @@ deployed_components = {
   opencost   = bool  # Deployment status
   kepler     = bool  # Deployment status
   scaphandre = bool  # Deployment status
+  kubegreen  = bool  # Deployment status
 }
 ```
 
@@ -263,6 +276,7 @@ greenops (root module)
 ├── opencost (Cost & carbon tracking)
 ├── kepler (Environmental impact tracking)
 ├── scaphandre (Container-level power monitoring)
+├── kubegreen (Resource cleanup & pod hibernation)
 └── demo_app (Optional Google microservices demo)
 ```
 

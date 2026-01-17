@@ -76,3 +76,17 @@ variable "scaphandre" {
     enabled = false
   }
 }
+
+# KubeGreen configuration
+variable "kubegreen" {
+  description = "KubeGreen module configuration"
+  type = object({
+    enabled      = bool
+    release_name = optional(string, "kube-green")
+    namespace    = optional(string, "kube-green")
+    values       = optional(any, {})
+  })
+  default = {
+    enabled = false
+  }
+}

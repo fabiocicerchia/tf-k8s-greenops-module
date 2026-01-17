@@ -40,6 +40,13 @@ module "greenops" {
     namespace    = var.scaphandre.namespace
     values       = var.scaphandre.values
   }
+
+  kubegreen = {
+    enabled      = var.kubegreen.enabled
+    release_name = var.kubegreen.release_name
+    namespace    = var.kubegreen.namespace
+    values       = var.kubegreen.values
+  }
 }
 
 resource "null_resource" "deploy_demo_app" {

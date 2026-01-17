@@ -50,3 +50,13 @@ module "scaphandre" {
   namespace       = var.scaphandre.namespace
   values          = var.scaphandre.values
 }
+
+module "kubegreen" {
+  count  = var.kubegreen.enabled ? 1 : 0
+  source = "https://github.com/fabiocicerchia/kepler-module.git//modules/kubegreen?ref=main"
+
+  kubeconfig_path = var.kubeconfig_path
+  release_name    = var.kubegreen.release_name
+  namespace       = var.kubegreen.namespace
+  values          = var.kubegreen.values
+}

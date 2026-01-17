@@ -66,3 +66,12 @@ scaphandre = {
   # https://github.com/hubblo-org/scaphandre
   values = {}
 }
+
+kubegreen = {
+  enabled      = false
+  release_name = "kube-green"
+  namespace    = "kube-green"
+  # https://github.com/kube-green/kube-green
+  # https://kube-green.github.io/
+  values = {}
+}

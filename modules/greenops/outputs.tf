@@ -43,6 +43,15 @@ output "scaphandre" {
   } : null
 }
 
+output "kubegreen" {
+  description = "KubeGreen module outputs"
+  value = var.kubegreen.enabled ? {
+    namespace    = module.kubegreen[0].namespace
+    release_name = module.kubegreen[0].release_name
+    version      = module.kubegreen[0].chart_version
+  } : null
+}
+
 output "deployed_components" {
   description = "List of deployed components"
   value = {
@@ -51,5 +60,6 @@ output "deployed_components" {
     opencost   = var.opencost.enabled
     kepler     = var.kepler.enabled
     scaphandre = var.scaphandre.enabled
+    kubegreen  = var.kubegreen.enabled
   }
 }
