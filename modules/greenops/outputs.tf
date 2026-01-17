@@ -34,6 +34,15 @@ output "kepler" {
   } : null
 }
 
+output "scaphandre" {
+  description = "Scaphandre module outputs"
+  value = var.scaphandre.enabled ? {
+    namespace    = module.scaphandre[0].namespace
+    release_name = module.scaphandre[0].release_name
+    version      = module.scaphandre[0].chart_version
+  } : null
+}
+
 output "deployed_components" {
   description = "List of deployed components"
   value = {
@@ -41,5 +50,6 @@ output "deployed_components" {
     keda       = var.keda.enabled
     opencost   = var.opencost.enabled
     kepler     = var.kepler.enabled
+    scaphandre = var.scaphandre.enabled
   }
 }

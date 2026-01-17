@@ -40,3 +40,13 @@ module "kepler" {
   values              = var.kepler.values
   deploy_powermonitor = var.kepler.deploy_powermonitor
 }
+
+module "scaphandre" {
+  count  = var.scaphandre.enabled ? 1 : 0
+  source = "https://github.com/fabiocicerchia/kepler-module.git//modules/scaphandre?ref=main"
+
+  kubeconfig_path = var.kubeconfig_path
+  release_name    = var.scaphandre.release_name
+  namespace       = var.scaphandre.namespace
+  values          = var.scaphandre.values
+}

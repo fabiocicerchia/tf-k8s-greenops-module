@@ -33,6 +33,13 @@ module "greenops" {
     values              = var.kepler.values
     deploy_powermonitor = var.kepler.deploy_powermonitor
   }
+
+  scaphandre = {
+    enabled      = var.scaphandre.enabled
+    release_name = var.scaphandre.release_name
+    namespace    = var.scaphandre.namespace
+    values       = var.scaphandre.values
+  }
 }
 
 resource "null_resource" "deploy_demo_app" {

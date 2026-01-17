@@ -10,6 +10,7 @@ The GreenOps Module provides a unified way to deploy and manage:
 - **KEDA** - Kubernetes Event Driven Autoscaling with optional example deployments
 - **OpenCost** - Cost monitoring and allocation with carbon cost tracking
 - **Kepler** - Environmental impact tracking via the Kepler Operator with optional power monitoring
+- **Scaphandre** - Container-level power consumption monitoring
 
 All components are optional and can be selectively deployed based on your requirements.
 
@@ -218,6 +219,17 @@ kepler = {
 ```
 Access via: `module.greenops.kepler.namespace`
 
+### scaphandre
+Scaphandre deployment information (if enabled):
+```hcl
+scaphandre = {
+  namespace    = string  # Kubernetes namespace
+  release_name = string  # Helm release name
+  version      = string  # Chart version
+}
+```
+Access via: `module.greenops.scaphandre.namespace`
+
 ### deployed_components
 Status of all deployed components:
 ```hcl
@@ -226,6 +238,7 @@ deployed_components = {
   keda       = bool  # Deployment status
   opencost   = bool  # Deployment status
   kepler     = bool  # Deployment status
+  scaphandre = bool  # Deployment status
 }
 ```
 
@@ -249,6 +262,7 @@ greenops (root module)
 ├── keda (Event-driven autoscaling)
 ├── opencost (Cost & carbon tracking)
 ├── kepler (Environmental impact tracking)
+├── scaphandre (Container-level power monitoring)
 └── demo_app (Optional Google microservices demo)
 ```
 

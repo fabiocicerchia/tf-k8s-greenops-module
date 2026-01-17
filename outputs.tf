@@ -34,7 +34,14 @@ output "kepler" {
   }
 }
 
-output "deployed_components" {
+output "scaphandre" {
+  description = "Scaphandre module outputs"
+  value = module.greenops.scaphandre == null ? null : {
+    namespace    = module.greenops.scaphandre.namespace
+    release_name = module.greenops.scaphandre.release_name
+    version      = module.greenops.scaphandre.version
+  }
+}
   description = "Map of deployed components and their status"
   value       = module.greenops.deployed_components
 }

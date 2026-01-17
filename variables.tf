@@ -59,3 +59,15 @@ variable "kepler" {
   })
   default = {}
 }
+
+# Scaphandre configuration
+variable "scaphandre" {
+  description = "Scaphandre module configuration"
+  type = object({
+    enabled      = optional(bool, false)
+    release_name = optional(string, "scaphandre")
+    namespace    = optional(string, "scaphandre")
+    values       = optional(any, {})
+  })
+  default = {}
+}

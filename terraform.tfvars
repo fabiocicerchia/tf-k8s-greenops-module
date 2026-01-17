@@ -58,3 +58,11 @@ kepler = {
     }
   }
 }
+
+scaphandre = {
+  enabled      = false
+  release_name = "scaphandre"
+  namespace    = "scaphandre"
+  # https://github.com/hubblo-org/scaphandre
+  values = {}
+}
