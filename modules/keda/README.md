@@ -27,9 +27,12 @@ Terraform module to deploy KEDA (Kubernetes Event Driven Autoscaling) on your Ku
 
 ```hcl
 module "keda" {
-  source = "./modules/keda"
+  source = "https://github.com/fabiocicerchia/kepler-module.git//modules/keda?ref=main"
 
   kubeconfig_path = "~/.kube/config"
+  release_name    = "kedacore"
+  namespace       = "keda"
+  values          = {}
 }
 ```
 
@@ -37,20 +40,20 @@ module "keda" {
 
 ```hcl
 module "keda" {
-  source = "./modules/keda"
+  source = "https://github.com/fabiocicerchia/kepler-module.git//modules/keda?ref=main"
 
-  deploy_keda_example = false
+  deploy_example = false
 }
 ```
 
-### With Custom Namespace and Manifest Path
+### With Custom Namespace
 
 ```hcl
 module "keda" {
-  source = "./modules/keda"
+  source = "https://github.com/fabiocicerchia/kepler-module.git//modules/keda?ref=main"
 
-  keda_namespace     = "custom-keda"
-  keda_manifest_path = "${path.module}/custom-keda-manifest.yaml"
+  namespace      = "custom-keda"
+  manifest_path  = "${path.module}/custom-keda-manifest.yaml"
 }
 ```
 
@@ -58,25 +61,27 @@ module "keda" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| deploy_keda_example | Deploy KEDA example manifests | `bool` | `true` | no |
-| keda_manifest_path | Path to KEDA manifest file | `string` | `"keda.yaml"` | no |
-| keda_namespace | Kubernetes namespace for KEDA | `string` | `"keda"` | no |
-| keda_release_name | Helm release name for KEDA | `string` | `"kedacore"` | no |
 | kubeconfig_path | Path to the kubeconfig file | `string` | `"~/.kube/config"` | no |
+| release_name | Helm release name for KEDA | `string` | `"kedacore"` | no |
+| namespace | Kubernetes namespace for KEDA | `string` | `"keda"` | no |
+| values | KEDA Helm chart values | `any` | `{}` | no |
+| deploy_example | Deploy KEDA example manifests | `bool` | `true` | no |
+| manifest_path | Path to KEDA manifest file | `string` | `"keda.yaml"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| keda_chart_version | Chart version of KEDA deployment |
-| keda_namespace | Kubernetes namespace where KEDA is deployed |
-| keda_release_name | Helm release name of KEDA |
+| chart_version | Chart version of KEDA deployment |
+| namespace | Kubernetes namespace where KEDA is deployed |
+| release_name | Helm release name of KEDA |
 
 ## Notes
 
 - KEDA example manifest file should be present in your working directory unless overridden
 - The Helm provider requires access to your Kubernetes cluster via kubeconfig
 - kubectl must be available in your PATH if deploying example manifests
+- Values are passed directly to the Helm chart as HCL objects
 
 ## Related Resources
 

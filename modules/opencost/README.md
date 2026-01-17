@@ -7,6 +7,7 @@ Terraform module to deploy OpenCost on your Kubernetes cluster for cost monitori
 - **Cost Monitoring**: Track and allocate cloud resource costs within your Kubernetes cluster
 - **Multi-Cloud Support**: Works with AWS, Azure, GCP, and on-premises clusters
 - **Resource Allocation**: Detailed cost breakdown by namespace, pod, and label
+- **Carbon Cost Tracking**: Integrated carbon footprint measurement
 
 ## Requirements
 
@@ -26,9 +27,12 @@ Terraform module to deploy OpenCost on your Kubernetes cluster for cost monitori
 
 ```hcl
 module "opencost" {
-  source = "./modules/opencost"
+  source = "https://github.com/fabiocicerchia/kepler-module.git//modules/opencost?ref=main"
 
   kubeconfig_path = "~/.kube/config"
+  release_name    = "opencost-charts"
+  namespace       = "opencost"
+  values          = {}
 }
 ```
 
@@ -36,10 +40,19 @@ module "opencost" {
 
 ```hcl
 module "opencost" {
-  source = "./modules/opencost"
+  source = "https://github.com/fabiocicerchia/kepler-module.git//modules/opencost?ref=main"
 
-  opencost_namespace   = "cost-monitoring"
-  opencost_values_path = "${path.module}/custom-opencost-values.yaml"
+  namespace = "cost-monitoring"
+  values = {
+    opencost = {
+      prometheus = {
+        internal = {
+          serviceName = "prometheus-kube-prometheus-prometheus"
+          port        = 9090
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -48,22 +61,23 @@ module "opencost" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | kubeconfig_path | Path to the kubeconfig file | `string` | `"~/.kube/config"` | no |
-| opencost_namespace | Kubernetes namespace for OpenCost | `string` | `"opencost"` | no |
-| opencost_release_name | Helm release name for OpenCost | `string` | `"opencost-charts"` | no |
-| opencost_values_path | Path to OpenCost Helm values file | `string` | `"values-opencost.yaml"` | no |
+| release_name | Helm release name for OpenCost | `string` | `"opencost-charts"` | no |
+| namespace | Kubernetes namespace for OpenCost | `string` | `"opencost"` | no |
+| values | OpenCost Helm chart values | `any` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| opencost_chart_version | Chart version of OpenCost deployment |
-| opencost_namespace | Kubernetes namespace where OpenCost is deployed |
-| opencost_release_name | Helm release name of OpenCost |
+| chart_version | Chart version of OpenCost deployment |
+| namespace | Kubernetes namespace where OpenCost is deployed |
+| release_name | Helm release name of OpenCost |
 
 ## Notes
 
-- Values file should be present in your working directory unless overridden
 - The Helm provider requires access to your Kubernetes cluster via kubeconfig
+- Values are passed directly to the Helm chart as HCL objects
+- Ensure Prometheus is deployed before OpenCost for cost metrics integration
 
 ## Related Resources
 

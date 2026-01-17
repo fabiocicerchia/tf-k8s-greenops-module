@@ -7,6 +7,7 @@ Terraform module to deploy the Prometheus monitoring stack on Kubernetes using H
 - **Kube Prometheus Stack**: Complete Prometheus, Grafana, and Alertmanager setup
 - **Metrics Collection**: Automatic scraping of Kubernetes metrics
 - **Grafana Dashboards**: Pre-configured dashboards for cluster monitoring
+- **ServiceMonitor Integration**: Automatic service discovery for metrics scraping
 
 ## Requirements
 
@@ -26,20 +27,30 @@ Terraform module to deploy the Prometheus monitoring stack on Kubernetes using H
 
 ```hcl
 module "prometheus" {
-  source = "./modules/prometheus"
+  source = "https://github.com/fabiocicerchia/kepler-module.git//modules/prometheus?ref=main"
 
   kubeconfig_path = "~/.kube/config"
+  release_name    = "prometheus-community"
+  namespace       = "monitoring"
+  values          = {}
 }
 ```
 
-### With Custom Namespace and Values
+### With Custom Values
 
 ```hcl
 module "prometheus" {
-  source = "./modules/prometheus"
+  source = "https://github.com/fabiocicerchia/kepler-module.git//modules/prometheus?ref=main"
 
-  prometheus_namespace   = "custom-monitoring"
-  prometheus_values_path = "${path.module}/custom-values.yaml"
+  kubeconfig_path = "~/.kube/config"
+  namespace       = "custom-monitoring"
+  values = {
+    prometheus = {
+      prometheusSpec = {
+        retention = "30d"
+      }
+    }
+  }
 }
 ```
 
@@ -48,22 +59,22 @@ module "prometheus" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | kubeconfig_path | Path to the kubeconfig file | `string` | `"~/.kube/config"` | no |
-| prometheus_namespace | Kubernetes namespace for Prometheus | `string` | `"monitoring"` | no |
-| prometheus_release_name | Helm release name for Prometheus | `string` | `"prometheus-community"` | no |
-| prometheus_values_path | Path to Prometheus Helm values file | `string` | `"values-prometheus.yaml"` | no |
+| release_name | Helm release name for Prometheus | `string` | `"prometheus-community"` | no |
+| namespace | Kubernetes namespace for Prometheus | `string` | `"monitoring"` | no |
+| values | Prometheus Helm chart values | `any` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| prometheus_chart_version | Chart version of Prometheus deployment |
-| prometheus_namespace | Kubernetes namespace where Prometheus is deployed |
-| prometheus_release_name | Helm release name of Prometheus |
+| chart_version | Chart version of Prometheus deployment |
+| namespace | Kubernetes namespace where Prometheus is deployed |
+| release_name | Helm release name of Prometheus |
 
 ## Notes
 
-- Values file should be present in your working directory unless overridden
 - The Helm provider requires access to your Kubernetes cluster via kubeconfig
+- Values are passed directly to the Helm chart as HCL objects
 
 ## Related Resources
 

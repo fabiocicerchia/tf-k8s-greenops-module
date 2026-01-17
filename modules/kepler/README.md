@@ -8,6 +8,7 @@ Terraform module to deploy the Kepler Operator on your Kubernetes cluster for mo
 - **Environmental Impact Tracking**: Measure CO2 emissions from your workloads
 - **Cert Manager**: Automatic certificate management for cluster operations
 - **PowerMonitor Resources**: Optional deployment of PowerMonitor custom resources
+- **ServiceMonitor Integration**: Automatic Prometheus metrics collection
 
 ## Requirements
 
@@ -28,9 +29,22 @@ Terraform module to deploy the Kepler Operator on your Kubernetes cluster for mo
 
 ```hcl
 module "kepler" {
-  source = "./modules/kepler"
+  source = "https://github.com/fabiocicerchia/kepler-module.git//modules/kepler?ref=main"
 
   kubeconfig_path = "~/.kube/config"
+  release_name    = "kepler-operator"
+  namespace       = "kepler-operator"
+  values          = {}
+}
+```
+
+### Without PowerMonitor Deployment
+
+```hcl
+module "kepler" {
+  source = "https://github.com/fabiocicerchia/kepler-module.git//modules/kepler?ref=main"
+
+  deploy_powermonitor = false
 }
 ```
 
@@ -38,20 +52,14 @@ module "kepler" {
 
 ```hcl
 module "kepler" {
-  source = "./modules/kepler"
+  source = "https://github.com/fabiocicerchia/kepler-module.git//modules/kepler?ref=main"
 
-  kepler_namespace   = "custom-kepler"
-  kepler_values_path = "${path.module}/custom-kepler-values.yaml"
-}
-```
-
-### Disable Optional Components
-
-```hcl
-module "kepler" {
-  source = "./modules/kepler"
-
-  deploy_powermonitor = false
+  namespace = "custom-kepler"
+  values = {
+    serviceMonitor = {
+      enabled = true
+    }
+  }
 }
 ```
 
@@ -59,63 +67,30 @@ module "kepler" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| deploy_powermonitor | Deploy the Kepler PowerMonitor resource | `bool` | `true` | no |
-| kepler_namespace | Kubernetes namespace for Kepler Operator | `string` | `"kepler-operator"` | no |
-| kepler_release_name | Helm release name for Kepler Operator | `string` | `"kepler-operator"` | no |
-| kepler_values_path | Path to Kepler Helm values file | `string` | `"values-kepler.yaml"` | no |
 | kubeconfig_path | Path to the kubeconfig file | `string` | `"~/.kube/config"` | no |
+| release_name | Helm release name for Kepler Operator | `string` | `"kepler-operator"` | no |
+| namespace | Kubernetes namespace for Kepler Operator | `string` | `"kepler-operator"` | no |
+| values | Kepler Helm chart values | `any` | `{}` | no |
+| deploy_powermonitor | Deploy the Kepler PowerMonitor resource | `bool` | `true` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| kepler_chart_version | Chart version of Kepler Operator deployment |
-| kepler_namespace | Kubernetes namespace where Kepler Operator is deployed |
-| kepler_release_name | Helm release name of Kepler Operator |
-
-## Examples
-
-### Minimal Example
-
-```hcl
-module "kepler" {
-  source = "./modules/kepler"
-}
-```
-
-### Complete Example
-
-```hcl
-module "kepler" {
-  source = "./modules/kepler"
-
-  kubeconfig_path = "~/.kube/config"
-
-  kepler_namespace   = "kepler-operator"
-  kepler_values_path = "${path.module}/values-kepler.yaml"
-
-  deploy_powermonitor = true
-}
-
-output "kepler_info" {
-  value = {
-    namespace = module.kepler.kepler_namespace
-    release   = module.kepler.kepler_release_name
-    version   = module.kepler.kepler_chart_version
-  }
-}
-```
+| chart_version | Chart version of Kepler Operator deployment |
+| namespace | Kubernetes namespace where Kepler Operator is deployed |
+| release_name | Helm release name of Kepler Operator |
 
 ## Notes
 
-- Cert Manager is deployed automatically as a dependency for the Kepler Operator
-- Values file should be present in your working directory unless overridden
 - The Helm provider requires access to your Kubernetes cluster via kubeconfig
-- kubectl must be available in your PATH for deployment operations
+- Cert Manager is automatically deployed as a dependency
+- Values are passed directly to the Helm chart as HCL objects
+- PowerMonitor resources require the Kepler CRDs to be installed first
 
 ## Related Resources
 
 - [Kepler Project](https://sustainable-computing.io/)
-- [Kepler Operator GitHub](https://github.com/sustainable-computing-io/kepler-operator)
-- [Cert Manager](https://cert-manager.io/)
+- [Kepler GitHub Repository](https://github.com/sustainable-computing-io/kepler)
+- [Kepler Helm Charts](https://github.com/sustainable-computing-io/kepler)
 
