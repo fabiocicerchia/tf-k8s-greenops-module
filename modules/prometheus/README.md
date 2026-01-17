@@ -1,8 +1,10 @@
 # Prometheus Module
 
-Terraform module to deploy the Prometheus monitoring stack on Kubernetes using Helm.
+Terraform module to deploy the Prometheus monitoring stack on Kubernetes using Helm. This module is part of the [tf-k8s-greenops-module](https://github.com/fabiocicerchia/tf-k8s-greenops-module) for comprehensive Kubernetes monitoring and sustainability tracking.
 
-## Features
+## Overview
+
+Prometheus is the foundation of the monitoring stack, providing metrics collection, storage, and visualization. It powers alerting and serves as the data source for other modules (OpenCost, Kepler).
 
 - **Kube Prometheus Stack**: Complete Prometheus, Grafana, and Alertmanager setup
 - **Metrics Collection**: Automatic scraping of Kubernetes metrics

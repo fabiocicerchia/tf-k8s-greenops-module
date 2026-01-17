@@ -314,6 +314,39 @@ Import these community dashboards for visualization:
 - [Kepler Prometheus Dashboard](https://raw.githubusercontent.com/sustainable-computing-io/kepler-operator/main/hack/dashboard/assets/prometheus/dashboard.json)
 - [Ariewald Kepler Dashboard](https://raw.githubusercontent.com/ariewald/kepler-grafana-dashboard/refs/heads/main/kepler.json)
 - [Energy K8s Experiments Dashboard](https://raw.githubusercontent.com/bernardodon/energy-k8s-experiments/refs/heads/main/grafana-setup.json)
+- [OpenCost Dashboards](https://github.com/opencost/opencost/tree/develop/dashboard)
+
+## Module Details
+
+### Prometheus
+Monitoring and metrics collection powered by `kube-prometheus-stack`. Includes Prometheus, Grafana, and Alertmanager. Essential foundation for the entire monitoring stack.
+
+**Use case**: When you need comprehensive cluster metrics, visualization, and alerting capabilities.
+
+### KEDA
+Kubernetes Event Driven Autoscaling enables scaling based on events and external metrics, not just CPU/memory. Includes optional example deployments.
+
+**Use case**: When you need to autoscale workloads based on event sources (queues, schedules, metrics) or custom metrics.
+
+### OpenCost
+Cloud cost monitoring and allocation with carbon footprint tracking. Integrates with Prometheus for cost visibility.
+
+**Use case**: When you need to track infrastructure costs and carbon emissions by workload, namespace, or pod.
+
+### Kepler
+Kubernetes Environmental Power Profiling Operator tracks environmental impact and power consumption. Includes optional PowerMonitor resource for detailed power metrics.
+
+**Use case**: When you want to monitor and optimize the energy efficiency and environmental impact of your Kubernetes cluster.
+
+### Scaphandre
+Container-level power consumption monitoring using CPU models and turbostat. Provides granular power usage data.
+
+**Use case**: When you need detailed power consumption data at the container or process level.
+
+### KubeGreen
+Automated resource cleanup and pod hibernation for cost optimization. Automatically sleeps and wakes workloads on schedules.
+
+**Use case**: When you want to reduce costs by automatically sleeping non-production workloads during off-hours.
 
 ## Architecture
 
@@ -438,3 +471,104 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - [KEDA Helm Chart](https://github.com/kedacore/charts)
 - [OpenCost Helm Chart](https://github.com/opencost/opencost-helm-chart)
 - [Kepler Helm Chart](https://github.com/sustainable-computing-io/kepler)
+- [Scaphandre Repository](https://github.com/hubblo-org/scaphandre)
+- [KubeGreen Repository](https://github.com/kube-green/kube-green)
+
+## Use Case Examples
+
+### Complete Monitoring Stack
+Deploy all modules for comprehensive monitoring, cost tracking, and optimization:
+
+```hcl
+terraform init
+terraform apply
+```
+
+### Cost & Carbon Tracking Only
+Enable Prometheus (for metrics) and OpenCost (for costs):
+
+```hcl
+prometheus = { enabled = true }
+keda = { enabled = false }
+opencost = { enabled = true }
+kepler = { enabled = false }
+scaphandre = { enabled = false }
+kubegreen = { enabled = false }
+```
+
+### Sustainability Focus
+Enable environmental impact tracking with Kepler and Scaphandre:
+
+```hcl
+prometheus = { enabled = true }
+kepler = { enabled = true }
+scaphandre = { enabled = true }
+kubegreen = { enabled = true }
+keda = { enabled = false }
+opencost = { enabled = false }
+```
+
+### Development Environment
+Minimal setup for testing, with cost optimization:
+
+```hcl
+prometheus = { enabled = true }
+kubegreen = { enabled = true }  # Reduce costs during off-hours
+others = { enabled = false }
+```
+
+## Troubleshooting by Component
+
+### Prometheus
+```bash
+# Check Prometheus pod
+kubectl get pods -n monitoring
+kubectl logs -n monitoring -l app.kubernetes.io/name=prometheus
+
+# Access Prometheus UI
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
+```
+
+### KEDA
+```bash
+# Check KEDA deployment
+kubectl get pods -n keda
+kubectl logs -n keda -l app=keda-operator
+
+# View ScaledObjects
+kubectl get scaledobjects -A
+```
+
+### OpenCost
+```bash
+# Check OpenCost pod
+kubectl get pods -n opencost
+kubectl logs -n opencost -l app=opencost
+```
+
+### Kepler
+```bash
+# Check Kepler pod
+kubectl get pods -n kepler-operator
+kubectl logs -n kepler-operator -l app=kepler
+
+# Check PowerMonitor (if enabled)
+kubectl get powermonitors -A
+```
+
+### Scaphandre
+```bash
+# Check Scaphandre DaemonSet
+kubectl get ds -n scaphandre
+kubectl logs -n scaphandre -l app=scaphandre --tail=50
+```
+
+### KubeGreen
+```bash
+# Check KubeGreen pod
+kubectl get pods -n kube-green
+kubectl logs -n kube-green -l app.kubernetes.io/name=kube-green
+
+# Check SleepInfos
+kubectl get sleepinfos -A
+```

@@ -1,8 +1,10 @@
 # KEDA Module
 
-Terraform module to deploy KEDA (Kubernetes Event Driven Autoscaling) on your Kubernetes cluster using Helm.
+Terraform module to deploy KEDA (Kubernetes Event Driven Autoscaling) on your Kubernetes cluster using Helm. This module is part of the [tf-k8s-greenops-module](https://github.com/fabiocicerchia/tf-k8s-greenops-module) for comprehensive Kubernetes monitoring and optimization.
 
-## Features
+## Overview
+
+KEDA enables intelligent autoscaling based on events and custom metrics, not just CPU/memory. It complements the monitoring stack by allowing automatic scaling responses to system conditions.
 
 - **Event-Driven Autoscaling**: Scale Kubernetes workloads based on external events
 - **Multiple Scalers**: Support for various event sources (HTTP, Kafka, AWS, GCP, Azure, etc.)

@@ -1,8 +1,10 @@
 # KubeGreen Module
 
-Terraform module to deploy KubeGreen on your Kubernetes cluster for automated resource cleanup and optimization.
+Terraform module to deploy KubeGreen on your Kubernetes cluster for automated resource cleanup and optimization. This module is part of the [tf-k8s-greenops-module](https://github.com/fabiocicerchia/tf-k8s-greenops-module) for comprehensive Kubernetes monitoring and sustainability tracking.
 
-## Features
+## Overview
+
+KubeGreen automatically manages workload schedules to reduce resource consumption during off-hours, directly lowering both costs and environmental impact.
 
 - **Automatic Resource Cleanup**: Remove unused resources automatically
 - **Pod Hibernation**: Sleep pods during off-hours to save resources

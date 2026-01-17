@@ -263,6 +263,26 @@ kepler = {
 }
 ```
 
+### scaphandre
+Scaphandre module outputs (if enabled):
+```hcl
+scaphandre = {
+  namespace    = string  # Kubernetes namespace where Scaphandre is deployed
+  release_name = string  # Helm release name of Scaphandre
+  version      = string  # Chart version deployed
+}
+```
+
+### kubegreen
+KubeGreen module outputs (if enabled):
+```hcl
+kubegreen = {
+  namespace    = string  # Kubernetes namespace where KubeGreen is deployed
+  release_name = string  # Helm release name of KubeGreen
+  version      = string  # Chart version deployed
+}
+```
+
 ### deployed_components
 Map showing which components are enabled:
 ```hcl
@@ -271,6 +291,8 @@ deployed_components = {
   keda       = bool  # true if KEDA is enabled
   opencost   = bool  # true if OpenCost is enabled
   kepler     = bool  # true if Kepler is enabled
+  scaphandre = bool  # true if Scaphandre is enabled
+  kubegreen  = bool  # true if KubeGreen is enabled
 }
 ```
 
@@ -377,30 +399,38 @@ module "greenops" {
 ### Check Deployment Status
 
 ```bash
-# Check all pods
+# Check all pods across all namespaces
 kubectl get pods -A
 
-# Check specific component
-kubectl get pods -n monitoring
-kubectl get pods -n keda
-kubectl get pods -n opencost
-kubectl get pods -n kepler-operator
+# Check specific component namespaces
+kubectl get pods -n monitoring      # Prometheus
+kubectl get pods -n keda            # KEDA
+kubectl get pods -n opencost        # OpenCost
+kubectl get pods -n kepler-operator # Kepler
+kubectl get pods -n scaphandre      # Scaphandre
+kubectl get pods -n kube-green      # KubeGreen
 ```
 
 ### View Component Logs
 
 ```bash
 # Prometheus
-kubectl logs -n monitoring -l app.kubernetes.io/name=prometheus
+kubectl logs -n monitoring -l app.kubernetes.io/name=prometheus --tail=100
 
 # KEDA
-kubectl logs -n keda -l app=keda-operator
+kubectl logs -n keda -l app=keda-operator --tail=100
 
 # OpenCost
-kubectl logs -n opencost -l app=opencost
+kubectl logs -n opencost -l app=opencost --tail=100
 
 # Kepler
-kubectl logs -n kepler-operator -l app.kubernetes.io/name=kepler
+kubectl logs -n kepler-operator -l app.kubernetes.io/name=kepler --tail=100
+
+# Scaphandre
+kubectl logs -n scaphandre -l app=scaphandre --tail=100
+
+# KubeGreen
+kubectl logs -n kube-green -l app.kubernetes.io/name=kube-green --tail=100
 ```
 
 ### Access Services Locally
@@ -409,11 +439,27 @@ kubectl logs -n kepler-operator -l app.kubernetes.io/name=kepler
 # Prometheus
 kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
 
-# Grafana
+# Grafana (part of Prometheus)
 kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
 
-# OpenCost
+# OpenCost UI
 kubectl port-forward -n opencost svc/opencost 9090
+```
+
+### Debug Component Issues
+
+```bash
+# Describe pods to see events
+kubectl describe pod -n monitoring <pod-name>
+
+# Check resource requests/limits
+kubectl get pods -n monitoring -o json | grep -A5 "resources"
+
+# Check ServiceMonitor status
+kubectl get servicemonitor -A
+
+# Check Helm releases
+helm list -A
 ```
 
 ## Related Resources
@@ -422,3 +468,5 @@ kubectl port-forward -n opencost svc/opencost 9090
 - [KEDA Documentation](https://keda.sh/)
 - [OpenCost Project](https://www.opencost.io/)
 - [Kepler Project](https://sustainable-computing.io/)
+- [Scaphandre Repository](https://github.com/hubblo-org/scaphandre)
+- [KubeGreen Repository](https://github.com/kube-green/kube-green)

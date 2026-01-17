@@ -1,8 +1,10 @@
 # OpenCost Module
 
-Terraform module to deploy OpenCost on your Kubernetes cluster for cost monitoring and allocation.
+Terraform module to deploy OpenCost on your Kubernetes cluster for cost monitoring and allocation. This module is part of the [tf-k8s-greenops-module](https://github.com/fabiocicerchia/tf-k8s-greenops-module) for comprehensive Kubernetes monitoring and sustainability tracking.
 
-## Features
+## Overview
+
+OpenCost provides cost allocation and visibility into your Kubernetes spending, integrated with carbon tracking to measure environmental impact alongside financial costs.
 
 - **Cost Monitoring**: Track and allocate cloud resource costs within your Kubernetes cluster
 - **Multi-Cloud Support**: Works with AWS, Azure, GCP, and on-premises clusters

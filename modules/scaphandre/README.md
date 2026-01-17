@@ -1,8 +1,10 @@
 # Scaphandre Module
 
-Terraform module to deploy Scaphandre on your Kubernetes cluster for power consumption and environmental impact monitoring.
+Terraform module to deploy Scaphandre on your Kubernetes cluster for power consumption and environmental impact monitoring. This module is part of the [tf-k8s-greenops-module](https://github.com/fabiocicerchia/tf-k8s-greenops-module) for comprehensive Kubernetes monitoring and sustainability tracking.
 
-## Features
+## Overview
+
+Scaphandre provides container-level power consumption monitoring, complementing cluster-level metrics from Kepler with granular per-container energy usage data.
 
 - **Power Consumption Monitoring**: Track energy usage at container level
 - **Detailed Metrics**: Fine-grained power consumption data per container

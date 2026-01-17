@@ -1,8 +1,10 @@
 # Kepler Operator Module
 
-Terraform module to deploy the Kepler Operator on your Kubernetes cluster for monitoring and tracking the environmental impact and power consumption.
+Terraform module to deploy the Kepler Operator on your Kubernetes cluster for monitoring and tracking the environmental impact and power consumption. This module is part of the [tf-k8s-greenops-module](https://github.com/fabiocicerchia/tf-k8s-greenops-module) for comprehensive Kubernetes monitoring and sustainability tracking.
 
-## Features
+## Overview
+
+Kepler (Kubernetes Environmental Power Profiling) tracks power consumption and environmental impact at the cluster level, integrating with Prometheus for detailed sustainability metrics.
 
 - **Power Consumption Monitoring**: Track energy usage across your cluster
 - **Environmental Impact Tracking**: Measure CO2 emissions from your workloads
