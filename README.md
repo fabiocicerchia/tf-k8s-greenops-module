@@ -108,7 +108,7 @@ Import these community dashboards for visualization:
 
 ## Contributing
 
-Contributions are welcome! Please submit pull requests to the [GitHub repository](https://github.com/fabiocicerchia/terraform-k8s-greenops-module).
+Contributions are welcome! Please submit pull requests to the [GitHub repository](https://github.com/fabiocicerchia/terraform-kubernetes-greenops).
 
 ## License
 

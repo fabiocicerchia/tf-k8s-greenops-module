@@ -32,7 +32,7 @@ Comprehensive Terraform module for deploying a complete green operations monitor
 
 ```hcl
 module "greenops" {
-  source = "https://github.com/fabiocicerchia/terraform-k8s-greenops-module.git?ref=main"
+  source = "https://github.com/fabiocicerchia/terraform-kubernetes-greenops.git?ref=main"
 
   kubeconfig_path = "~/.kube/config"
 }
@@ -44,7 +44,7 @@ All six components (Prometheus, KEDA, OpenCost, Kepler, Scaphandre, and KubeGree
 
 ```hcl
 module "greenops" {
-  source = "https://github.com/fabiocicerchia/terraform-k8s-greenops-module.git?ref=main"
+  source = "https://github.com/fabiocicerchia/terraform-kubernetes-greenops.git?ref=main"
 
   kubeconfig_path = "~/.kube/config"
 
@@ -78,7 +78,7 @@ module "greenops" {
 
 ```hcl
 module "greenops" {
-  source = "https://github.com/fabiocicerchia/terraform-k8s-greenops-module.git?ref=main"
+  source = "https://github.com/fabiocicerchia/terraform-kubernetes-greenops.git?ref=main"
 
   kubeconfig_path = "~/.kube/config"
 
@@ -321,7 +321,7 @@ Only enable Prometheus for basic monitoring:
 
 ```hcl
 module "greenops" {
-  source = "https://github.com/fabiocicerchia/terraform-k8s-greenops-module.git?ref=main"
+  source = "https://github.com/fabiocicerchia/terraform-kubernetes-greenops.git?ref=main"
 
   prometheus = { enabled = true }
   keda       = { enabled = false }
@@ -336,7 +336,7 @@ Enable Prometheus and OpenCost for cost visibility:
 
 ```hcl
 module "greenops" {
-  source = "https://github.com/fabiocicerchia/terraform-k8s-greenops-module.git?ref=main"
+  source = "https://github.com/fabiocicerchia/terraform-kubernetes-greenops.git?ref=main"
 
   prometheus = { enabled = true }
   opencost   = { enabled = true }
@@ -349,7 +349,7 @@ Complete stack for environmental tracking:
 
 ```hcl
 module "greenops" {
-  source = "https://github.com/fabiocicerchia/terraform-k8s-greenops-module.git?ref=main"
+  source = "https://github.com/fabiocicerchia/terraform-kubernetes-greenops.git?ref=main"
 
   # All enabled by default, just provide custom values if needed
   prometheus = {
@@ -389,7 +389,7 @@ Deploy from specific tags, branches, or commits:
 
 ```hcl
 module "greenops" {
-  source = "https://github.com/fabiocicerchia/terraform-k8s-greenops-module.git?ref=v1.0.0"
+  source = "https://github.com/fabiocicerchia/terraform-kubernetes-greenops.git?ref=v1.0.0"
   # or use: ref=develop, ref=main, ref=abc1234 (commit SHA)
 }
 ```
