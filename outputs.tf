@@ -1,63 +1,65 @@
 output "prometheus" {
   description = "Prometheus module outputs"
   value = var.prometheus.enabled ? {
-    namespace    = module.greenops.prometheus.namespace
-    release_name = module.greenops.prometheus.release_name
-    version      = module.greenops.prometheus.version
+    namespace    = module.prometheus[0].namespace
+    release_name = module.prometheus[0].release_name
+    version      = module.prometheus[0].chart_version
   } : null
 }
 
 output "keda" {
   description = "KEDA module outputs"
   value = var.keda.enabled ? {
-    namespace    = module.greenops.keda.namespace
-    release_name = module.greenops.keda.release_name
-    version      = module.greenops.keda.version
+    namespace    = module.keda[0].namespace
+    release_name = module.keda[0].release_name
+    version      = module.keda[0].chart_version
   } : null
 }
 
 output "opencost" {
   description = "OpenCost module outputs"
   value = var.opencost.enabled ? {
-    namespace    = module.greenops.opencost.namespace
-    release_name = module.greenops.opencost.release_name
-    version      = module.greenops.opencost.version
+    namespace    = module.opencost[0].namespace
+    release_name = module.opencost[0].release_name
+    version      = module.opencost[0].chart_version
   } : null
 }
 
 output "kepler" {
   description = "Kepler module outputs"
   value = var.kepler.enabled ? {
-    namespace    = module.greenops.kepler.namespace
-    release_name = module.greenops.kepler.release_name
-    version      = module.greenops.kepler.version
+    namespace    = module.kepler[0].namespace
+    release_name = module.kepler[0].release_name
+    version      = module.kepler[0].chart_version
   } : null
 }
 
 output "scaphandre" {
   description = "Scaphandre module outputs"
   value = var.scaphandre.enabled ? {
-    namespace    = module.greenops.scaphandre.namespace
-    release_name = module.greenops.scaphandre.release_name
-    version      = module.greenops.scaphandre.version
+    namespace    = module.scaphandre[0].namespace
+    release_name = module.scaphandre[0].release_name
+    version      = module.scaphandre[0].chart_version
   } : null
 }
 
 output "kubegreen" {
   description = "KubeGreen module outputs"
   value = var.kubegreen.enabled ? {
-    namespace    = module.greenops.kubegreen.namespace
-    release_name = module.greenops.kubegreen.release_name
-    version      = module.greenops.kubegreen.version
+    namespace    = module.kubegreen[0].namespace
+    release_name = module.kubegreen[0].release_name
+    version      = module.kubegreen[0].chart_version
   } : null
 }
 
 output "deployed_components" {
-  description = "Map of deployed components and their status"
-  value       = module.greenops.deployed_components
-}
-
-output "demo_app_deployed" {
-  description = "Whether the demo application was deployed"
-  value       = var.deploy_demo_app
+  description = "List of deployed components"
+  value = {
+    prometheus = var.prometheus.enabled
+    keda       = var.keda.enabled
+    opencost   = var.opencost.enabled
+    kepler     = var.kepler.enabled
+    scaphandre = var.scaphandre.enabled
+    kubegreen  = var.kubegreen.enabled
+  }
 }
