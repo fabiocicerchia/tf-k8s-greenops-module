@@ -1,4 +1,4 @@
-# TF Kubernetes GreenOps Module
+# Terraform Module for GreenOps
 
 Comprehensive Terraform module for deploying a complete green operations monitoring stack on Kubernetes. Includes Prometheus, KEDA, OpenCost, Kepler Operator, Scaphandre, and KubeGreen with individual toggles for selective component deployment.
 
@@ -11,7 +11,7 @@ The GreenOps Module provides a unified way to deploy and manage:
 - **OpenCost** - Cost monitoring and allocation with carbon cost tracking
 - **Kepler** - Environmental impact tracking via the Kepler Operator with optional power monitoring
 - **Scaphandre** - Container-level power consumption monitoring
-- **KubeGreen** - Automated resource cleanup and pod hibernation for cost optimization
+- **KubeGreen** - Automated resource cleanup and pod hibernation for cost optimisation
 
 All components are **enabled by default** and can be selectively disabled based on your requirements.
 
@@ -38,7 +38,7 @@ All components are **enabled by default** and can be selectively disabled based 
 
 | Name | Version |
 |------|---------|
-| terraform | >= 1.0 |
+| terraform | >= 1.0 or OpenTofu >= 1.6 |
 | helm | >= 2.0 |
 | null | >= 3.0 |
 
@@ -235,7 +235,7 @@ keda = {
 
 ## Outputs
 
-The module provides outputs organized in nested objects for better structure:
+The module provides outputs organised in nested objects for better structure:
 
 ### prometheus
 Prometheus module outputs (if enabled):
@@ -309,23 +309,6 @@ deployed_components = {
   kubegreen  = bool  # true if KubeGreen is enabled
 }
 ```
-
-## Architecture
-
-```
-greenops (orchestration module)
-├── prometheus (metrics collection)
-├── keda (event-driven autoscaling)
-├── opencost (cost & carbon tracking)
-├── kepler (environmental impact tracking)
-└── demo_app (optional sample workload)
-```
-
-### Module Dependencies
-
-- **Cert Manager**: Automatically deployed as a dependency of Kepler Operator
-- **Prometheus ServiceMonitors**: Configured for all components when enabled
-- **Demo App**: Depends on greenops module completion
 
 ## Configuration Examples
 
@@ -476,11 +459,6 @@ kubectl get servicemonitor -A
 helm list -A
 ```
 
-## Related Resources
+## License
 
-- [Prometheus Community Helm Charts](https://github.com/prometheus-community/helm-charts)
-- [KEDA Documentation](https://keda.sh/)
-- [OpenCost Project](https://www.opencost.io/)
-- [Kepler Project](https://sustainable-computing.io/)
-- [Scaphandre Repository](https://github.com/hubblo-org/scaphandre)
-- [KubeGreen Repository](https://github.com/kube-green/kube-green)
+MIT
