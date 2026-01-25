@@ -72,6 +72,24 @@ output "cloud_carbon_footprint" {
   } : null
 }
 
+output "green_metrics_tool" {
+  description = "Green Metrics Tool module outputs"
+  value = var.green_metrics_tool.enabled ? {
+    namespace    = module.green_metrics_tool[0].namespace
+    release_name = module.green_metrics_tool[0].release_name
+    version      = module.green_metrics_tool[0].chart_version
+  } : null
+}
+
+output "codecarbon" {
+  description = "CodeCarbon module outputs"
+  value = var.codecarbon.enabled ? {
+    namespace    = module.codecarbon[0].namespace
+    release_name = module.codecarbon[0].release_name
+    version      = module.codecarbon[0].chart_version
+  } : null
+}
+
 output "deployed_components" {
   description = "List of deployed components"
   value = {
@@ -83,5 +101,7 @@ output "deployed_components" {
     kubegreen                 = var.kubegreen.enabled
     carbon_intensity_exporter = var.carbon_intensity_exporter.enabled
     cloud_carbon_footprint    = var.cloud_carbon_footprint.enabled
+    green_metrics_tool        = var.green_metrics_tool.enabled
+    codecarbon                = var.codecarbon.enabled
   }
 }

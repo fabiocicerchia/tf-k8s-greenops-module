@@ -102,4 +102,32 @@ variable "cloud_carbon_footprint" {
     chart_version = optional(string, "")
     values        = optional(any, {})
   })
+  default = { enabled = true }
+}
+
+# Green Metrics Tool configuration
+variable "green_metrics_tool" {
+  description = "Green Metrics Tool module configuration"
+  type = object({
+    enabled       = bool
+    release_name  = optional(string, "green-metrics-tool")
+    namespace     = optional(string, "green-metrics-tool")
+    chart_version = optional(string, "")
+    values        = optional(any, {})
+    postgres_password = string
+  })
+  default = { enabled = true }
+}
+
+# CodeCarbon configuration
+variable "codecarbon" {
+  description = "CodeCarbon module configuration"
+  type = object({
+    enabled       = bool
+    release_name  = optional(string, "codecarbon")
+    namespace     = optional(string, "codecarbon")
+    chart_version = optional(string, "")
+    values        = optional(any, {})
+  })
+  default = { enabled = true }
 }

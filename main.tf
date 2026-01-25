@@ -112,3 +112,34 @@ module "cloud_carbon_footprint" {
   chart_version = var.cloud_carbon_footprint.chart_version
   values        = var.cloud_carbon_footprint.values
 }
+
+module "green_metrics_tool" {
+  count  = var.green_metrics_tool.enabled ? 1 : 0
+  # source = "fabiocicerchia/green-metrics-tool/helm"
+  source = "../terraform-helm-green-metrics-tool"
+
+  providers = {
+    helm = helm
+  }
+
+  # release_name  = var.green_metrics_tool.release_name
+  namespace     = var.green_metrics_tool.namespace
+  # chart_version = var.green_metrics_tool.chart_version
+  # values        = var.green_metrics_tool.values
+  postgres_password = var.green_metrics_tool.postgres_password
+}
+
+module "codecarbon" {
+  count  = var.codecarbon.enabled ? 1 : 0
+  # source = "fabiocicerchia/codecarbon/helm"
+  source = "../terraform-helm-codecarbon"
+
+  providers = {
+    helm = helm
+  }
+
+  # release_name  = var.codecarbon.release_name
+  namespace     = var.codecarbon.namespace
+  # chart_version = var.codecarbon.chart_version
+  # values        = var.codecarbon.values
+}

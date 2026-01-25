@@ -1,6 +1,6 @@
 # Terraform Module for GreenOps
 
-Comprehensive Terraform module for deploying a complete green operations monitoring stack on Kubernetes. Includes Prometheus, KEDA, OpenCost, Kepler Operator, Scaphandre, KubeGreen, Carbon Intensity Exporter, and Cloud Carbon Footprint with individual toggles for selective component deployment.
+Comprehensive Terraform module for deploying a complete green operations monitoring stack on Kubernetes. Includes Prometheus, KEDA, OpenCost, Kepler Operator, Scaphandre, KubeGreen, Carbon Intensity Exporter, Cloud Carbon Footprint, Green Metrics Tool, and CodeCarbon with individual toggles for selective component deployment.
 
 ## Overview
 
@@ -14,6 +14,8 @@ The GreenOps Module provides a unified way to deploy and manage:
 - **KubeGreen** - Automated resource cleanup and pod hibernation for cost optimisation
 - **Carbon Intensity Exporter** - Grid carbon intensity metrics for location-aware scheduling
 - **Cloud Carbon Footprint** - Cloud infrastructure carbon emissions tracking
+- **Green Metrics Tool** - Software carbon footprint measurement and optimization
+- **CodeCarbon** - Python code carbon emissions tracking
 
 All components are **enabled by default** and can be selectively disabled based on your requirements.
 
@@ -28,6 +30,8 @@ All components are **enabled by default** and can be selectively disabled based 
 - **KubeGreen**: Automated resource cleanup and pod hibernation
 - **Carbon Intensity Exporter**: Grid carbon intensity metrics for location-aware scheduling
 - **Cloud Carbon Footprint**: Cloud infrastructure carbon emissions tracking
+- **Green Metrics Tool**: Software carbon footprint measurement and optimization
+- **CodeCarbon**: Python code carbon emissions tracking
 - **Flexible Configuration**: Customize each component independently with HCL values
 
 ## Dependencies
@@ -70,7 +74,7 @@ module "greenops" {
 }
 ```
 
-All eight components (Prometheus, KEDA, OpenCost, Kepler, Scaphandre, KubeGreen, Carbon Intensity Exporter, and Cloud Carbon Footprint) are **enabled by default**.
+All ten components (Prometheus, KEDA, OpenCost, Kepler, Scaphandre, KubeGreen, Carbon Intensity Exporter, Cloud Carbon Footprint, Green Metrics Tool, and CodeCarbon) are **enabled by default**.
 
 ### Disable Specific Components
 
@@ -161,6 +165,8 @@ module "greenops" {
 | kubegreen | KubeGreen module configuration | `object({...})` | `{ enabled = true, ... }` | no |
 | carbon_intensity_exporter | Carbon Intensity Exporter module configuration | `object({...})` | `{ enabled = true, ... }` | no |
 | cloud_carbon_footprint | Cloud Carbon Footprint module configuration | `object({...})` | `{ enabled = true, ... }` | no |
+| green_metrics_tool | Green Metrics Tool module configuration | `object({...})` | `{ enabled = true, ... }` | no |
+| codecarbon | CodeCarbon module configuration | `object({...})` | `{ enabled = true, ... }` | no |
 
 ### Detailed Input Schema
 
@@ -222,6 +228,50 @@ kubegreen = {
   enabled       = bool                    # Enable KubeGreen (default: true)
   release_name  = string                  # Helm release name (default: "kube-green")
   namespace     = string                  # Kubernetes namespace (default: "kube-green")
+  values        = any                     # Helm chart values (default: {})
+  chart_version = string                  # Helm chart version (default: "" for latest)
+}
+```
+
+#### carbon_intensity_exporter
+```hcl
+carbon_intensity_exporter = {
+  enabled       = bool                    # Enable Carbon Intensity Exporter (default: true)
+  release_name  = string                  # Helm release name (default: "carbon-intensity-exporter")
+  namespace     = string                  # Kubernetes namespace (default: "carbon-intensity-exporter")
+  values        = any                     # Helm chart values (default: {})
+  chart_version = string                  # Helm chart version (default: "" for latest)
+}
+```
+
+#### cloud_carbon_footprint
+```hcl
+cloud_carbon_footprint = {
+  enabled       = bool                    # Enable Cloud Carbon Footprint (default: true)
+  release_name  = string                  # Helm release name (default: "cloud-carbon-footprint")
+  namespace     = string                  # Kubernetes namespace (default: "cloud-carbon-footprint")
+  values        = any                     # Helm chart values (default: {})
+  chart_version = string                  # Helm chart version (default: "" for latest)
+}
+```
+
+#### green_metrics_tool
+```hcl
+green_metrics_tool = {
+  enabled       = bool                    # Enable Green Metrics Tool (default: true)
+  release_name  = string                  # Helm release name (default: "green-metrics-tool")
+  namespace     = string                  # Kubernetes namespace (default: "green-metrics-tool")
+  values        = any                     # Helm chart values (default: {})
+  chart_version = string                  # Helm chart version (default: "" for latest)
+}
+```
+
+#### codecarbon
+```hcl
+codecarbon = {
+  enabled       = bool                    # Enable CodeCarbon (default: true)
+  release_name  = string                  # Helm release name (default: "codecarbon")
+  namespace     = string                  # Kubernetes namespace (default: "codecarbon")
   values        = any                     # Helm chart values (default: {})
   chart_version = string                  # Helm chart version (default: "" for latest)
 }
@@ -332,6 +382,26 @@ cloud_carbon_footprint = {
 }
 ```
 
+### green_metrics_tool
+Green Metrics Tool module outputs (if enabled):
+```hcl
+green_metrics_tool = {
+  namespace    = string  # Kubernetes namespace where Green Metrics Tool is deployed
+  release_name = string  # Helm release name of Green Metrics Tool
+  version      = string  # Chart version deployed
+}
+```
+
+### codecarbon
+CodeCarbon module outputs (if enabled):
+```hcl
+codecarbon = {
+  namespace    = string  # Kubernetes namespace where CodeCarbon is deployed
+  release_name = string  # Helm release name of CodeCarbon
+  version      = string  # Chart version deployed
+}
+```
+
 ### deployed_components
 Map showing which components are enabled:
 ```hcl
@@ -344,6 +414,8 @@ deployed_components = {
   kubegreen                 = bool  # true if KubeGreen is enabled
   carbon_intensity_exporter = bool  # true if Carbon Intensity Exporter is enabled
   cloud_carbon_footprint    = bool  # true if Cloud Carbon Footprint is enabled
+  green_metrics_tool        = bool  # true if Green Metrics Tool is enabled
+  codecarbon                = bool  # true if CodeCarbon is enabled
 }
 ```
 
@@ -412,6 +484,14 @@ module "greenops" {
 
   cloud_carbon_footprint = {
     enabled = true  # Enable for cloud infrastructure carbon tracking
+  }
+
+  green_metrics_tool = {
+    enabled = true  # Enable for software carbon footprint measurement
+  }
+
+  codecarbon = {
+    enabled = true  # Enable for Python code carbon emissions tracking
   }
 }
 ```

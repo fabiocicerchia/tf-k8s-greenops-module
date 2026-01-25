@@ -139,6 +139,19 @@ module "greenops" {
     values        = {}
   }
 
+  green_metrics_tool = {
+    enabled           = true
+    release_name      = "green-metrics-tool"
+    namespace         = "green-metrics-tool"
+    postgres_password = "changeme" # Change this to a secure password
+  }
+
+  codecarbon = {
+    enabled      = true
+    release_name = "codecarbon"
+    namespace    = "codecarbon"
+  }
+
   depends_on = [null_resource.deploy_cert_manager]
 }
 
