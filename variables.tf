@@ -123,11 +123,18 @@ variable "green_metrics_tool" {
 variable "codecarbon" {
   description = "CodeCarbon module configuration"
   type = object({
-    enabled       = bool
-    release_name  = optional(string, "codecarbon")
-    namespace     = optional(string, "codecarbon")
-    chart_version = optional(string, "")
-    values        = optional(any, {})
+    enabled          = bool
+    name             = optional(string, "codecarbon")
+    namespace        = optional(string, "codecarbon")
+    image            = optional(string, "fabiocicerchia/codecarbon:latest")
+    api_endpoint     = optional(string, "https://api.codecarbon.io")
+    organization_id  = optional(string, "")
+    project_id       = optional(string, "")
+    experiment_id    = optional(string, "")
+    api_key          = optional(string, "")
   })
-  default = { enabled = true }
+  default = { 
+    enabled = true 
+  }
+  sensitive = true
 }

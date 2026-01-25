@@ -131,15 +131,18 @@ module "green_metrics_tool" {
 
 module "codecarbon" {
   count  = var.codecarbon.enabled ? 1 : 0
-  # source = "fabiocicerchia/codecarbon/helm"
-  source = "../terraform-helm-codecarbon"
+  source = "../terraform-kubernetes-codecarbon"
 
   providers = {
-    helm = helm
+    kubectl = kubectl
   }
 
-  # release_name  = var.codecarbon.release_name
-  namespace     = var.codecarbon.namespace
-  # chart_version = var.codecarbon.chart_version
-  # values        = var.codecarbon.values
+  name            = var.codecarbon.name
+  namespace       = var.codecarbon.namespace
+  image           = var.codecarbon.image
+  api_endpoint    = var.codecarbon.api_endpoint
+  organization_id = var.codecarbon.organization_id
+  project_id      = var.codecarbon.project_id
+  experiment_id   = var.codecarbon.experiment_id
+  api_key         = var.codecarbon.api_key
 }

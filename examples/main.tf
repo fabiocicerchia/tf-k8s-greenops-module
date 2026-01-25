@@ -147,9 +147,15 @@ module "greenops" {
   }
 
   codecarbon = {
-    enabled      = true
-    release_name = "codecarbon"
-    namespace    = "codecarbon"
+    enabled         = true
+    name            = "codecarbon"
+    namespace       = "codecarbon"
+    image           = "fabiocicerchia/codecarbon:latest"
+    api_endpoint    = "https://api.codecarbon.io"
+    organization_id = ""  # Set your organization ID
+    project_id      = ""  # Set your project ID
+    experiment_id   = ""  # Set your experiment ID
+    api_key         = ""  # Set your API key
   }
 
   depends_on = [null_resource.deploy_cert_manager]
