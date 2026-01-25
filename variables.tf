@@ -1,140 +1,131 @@
-# Prometheus configuration
-variable "prometheus" {
-  description = "Prometheus module configuration"
+# ------------------------------------------------------------------------------
+# Category: Observability & Scaling Infrastructure
+# ------------------------------------------------------------------------------
+variable "observability" {
+  description = "Observability and scaling tools"
   type = object({
-    enabled       = bool
-    release_name  = optional(string, "prometheus-community")
-    namespace     = optional(string, "monitoring")
-    values        = optional(any, {})
-    chart_version = optional(string, "")
+    prometheus = optional(object({
+      enabled       = bool
+      release_name  = optional(string, "prometheus-community")
+      namespace     = optional(string, "monitoring")
+      values        = optional(any, {})
+      chart_version = optional(string, "")
+    }), { enabled = true })
+    keda = optional(object({
+      enabled        = bool
+      release_name   = optional(string, "kedacore")
+      namespace      = optional(string, "keda")
+      values         = optional(any, {})
+      deploy_example = optional(bool, true)
+      manifest_path  = optional(string, "keda.yaml")
+      chart_version  = optional(string, "")
+    }), { enabled = true })
   })
-  default = { enabled = true }
+  default = {}
 }
 
-# KEDA configuration
-variable "keda" {
-  description = "KEDA module configuration"
+# ------------------------------------------------------------------------------
+# Category: Cost & Resource Efficiency
+# ------------------------------------------------------------------------------
+variable "cost_efficiency" {
+  description = "Cost and resource efficiency tools"
   type = object({
-    enabled        = bool
-    release_name   = optional(string, "kedacore")
-    namespace      = optional(string, "keda")
-    values         = optional(any, {})
-    deploy_example = optional(bool, true)
-    manifest_path  = optional(string, "keda.yaml")
-    chart_version  = optional(string, "")
+    opencost = optional(object({
+      enabled       = bool
+      release_name  = optional(string, "opencost-charts")
+      namespace     = optional(string, "opencost")
+      chart_version = optional(string, "")
+      values        = optional(any, {})
+    }), { enabled = true })
   })
-  default = { enabled = true }
+  default = {}
 }
 
-# OpenCost configuration
-variable "opencost" {
-  description = "OpenCost module configuration"
+# ------------------------------------------------------------------------------
+# Category: Energy & Power Monitoring
+# ------------------------------------------------------------------------------
+variable "energy_power" {
+  description = "Energy and power monitoring tools"
   type = object({
-    enabled       = bool
-    release_name  = optional(string, "opencost-charts")
-    namespace     = optional(string, "opencost")
-    chart_version = optional(string, "")
-    values        = optional(any, {})
+    kepler = optional(object({
+      enabled             = bool
+      release_name        = optional(string, "kepler-operator")
+      namespace           = optional(string, "kepler-operator")
+      values              = optional(any, {})
+      chart_version       = optional(string, "")
+      deploy_powermonitor = optional(bool, true)
+    }), { enabled = true })
+    scaphandre = optional(object({
+      enabled       = bool
+      release_name  = optional(string, "scaphandre")
+      namespace     = optional(string, "scaphandre")
+      chart_version = optional(string, "")
+      values        = optional(any, {})
+    }), { enabled = true })
   })
-  default = { enabled = true }
+  default = {}
 }
 
-# Kepler configuration
-variable "kepler" {
-  description = "Kepler module configuration"
+# ------------------------------------------------------------------------------
+# Category: Carbon & Emissions Estimation
+# ------------------------------------------------------------------------------
+variable "carbon_emissions" {
+  description = "Carbon and emissions estimation tools"
   type = object({
-    enabled             = bool
-    release_name        = optional(string, "kepler-operator")
-    namespace           = optional(string, "kepler-operator")
-    values              = optional(any, {})
-    chart_version       = optional(string, "")
-    deploy_powermonitor = optional(bool, true)
+    carbon_intensity_exporter = optional(object({
+      enabled       = bool
+      release_name  = optional(string, "carbon-intensity-exporter")
+      namespace     = optional(string, "carbon-intensity-exporter")
+      chart_version = optional(string, "")
+      values        = optional(any, {})
+    }), { enabled = true })
+    cloud_carbon_footprint = optional(object({
+      enabled       = bool
+      release_name  = optional(string, "cloud-carbon-footprint")
+      namespace     = optional(string, "cloud-carbon-footprint")
+      chart_version = optional(string, "")
+      values        = optional(any, {})
+    }), { enabled = true })
+    codecarbon = optional(object({
+      enabled         = bool
+      name            = optional(string, "codecarbon")
+      namespace       = optional(string, "codecarbon")
+      image           = optional(string, "fabiocicerchia/codecarbon:latest")
+      api_endpoint    = optional(string, "https://api.codecarbon.io")
+      organization_id = optional(string, "")
+      project_id      = optional(string, "")
+      experiment_id   = optional(string, "")
+      api_key         = optional(string, "")
+    }), { enabled = true })
   })
-  default = { enabled = true }
-}
-
-# Scaphandre configuration
-variable "scaphandre" {
-  description = "Scaphandre module configuration"
-  type = object({
-    enabled       = bool
-    release_name  = optional(string, "scaphandre")
-    namespace     = optional(string, "scaphandre")
-    chart_version = optional(string, "")
-    values        = optional(any, {})
-  })
-  default = { enabled = true }
-}
-
-# KubeGreen configuration
-variable "kubegreen" {
-  description = "KubeGreen module configuration"
-  type = object({
-    enabled       = bool
-    release_name  = optional(string, "kube-green")
-    namespace     = optional(string, "kube-green")
-    chart_version = optional(string, "")
-    values        = optional(any, {})
-  })
-  default = { enabled = true }
-}
-
-# Carbon Intensity Exporter configuration
-variable "carbon_intensity_exporter" {
-  description = "Carbon Intensity Exporter module configuration"
-  type = object({
-    enabled       = bool
-    release_name  = optional(string, "carbon-intensity-exporter")
-    namespace     = optional(string, "carbon-intensity-exporter")
-    chart_version = optional(string, "")
-    values        = optional(any, {})
-  })
-  default = { enabled = true }
-}
-
-# Cloud Carbon Footprint configuration
-variable "cloud_carbon_footprint" {
-  description = "Cloud Carbon Footprint module configuration"
-  type = object({
-    enabled       = bool
-    release_name  = optional(string, "cloud-carbon-footprint")
-    namespace     = optional(string, "cloud-carbon-footprint")
-    chart_version = optional(string, "")
-    values        = optional(any, {})
-  })
-  default = { enabled = true }
-}
-
-# Green Metrics Tool configuration
-variable "green_metrics_tool" {
-  description = "Green Metrics Tool module configuration"
-  type = object({
-    enabled       = bool
-    release_name  = optional(string, "green-metrics-tool")
-    namespace     = optional(string, "green-metrics-tool")
-    chart_version = optional(string, "")
-    values        = optional(any, {})
-    postgres_password = string
-  })
-  default = { enabled = true }
-}
-
-# CodeCarbon configuration
-variable "codecarbon" {
-  description = "CodeCarbon module configuration"
-  type = object({
-    enabled          = bool
-    name             = optional(string, "codecarbon")
-    namespace        = optional(string, "codecarbon")
-    image            = optional(string, "fabiocicerchia/codecarbon:latest")
-    api_endpoint     = optional(string, "https://api.codecarbon.io")
-    organization_id  = optional(string, "")
-    project_id       = optional(string, "")
-    experiment_id    = optional(string, "")
-    api_key          = optional(string, "")
-  })
-  default = { 
-    enabled = true 
-  }
+  default   = {}
   sensitive = true
+}
+
+# ------------------------------------------------------------------------------
+# Category: Sustainability Optimisation & Automation
+# ------------------------------------------------------------------------------
+variable "sustainability_optimisation" {
+  description = "Sustainability optimisation and automation tools"
+  type = object({
+    kubegreen = optional(object({
+      enabled       = bool
+      release_name  = optional(string, "kube-green")
+      namespace     = optional(string, "kube-green")
+      chart_version = optional(string, "")
+      values        = optional(any, {})
+    }), { enabled = true })
+    green_metrics_tool = optional(object({
+      enabled           = bool
+      release_name      = optional(string, "green-metrics-tool")
+      namespace         = optional(string, "green-metrics-tool")
+      chart_version     = optional(string, "")
+      values            = optional(any, {})
+      postgres_password = string
+      }), {
+      enabled           = true
+      postgres_password = "change_me"
+    })
+  })
+  default = {}
 }

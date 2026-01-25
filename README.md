@@ -1,4 +1,4 @@
-# Terraform Module for GreenOps
+# 🌱 Terraform Module for GreenOps
 
 Comprehensive Terraform module for deploying a complete green operations monitoring stack on Kubernetes. Includes Prometheus, KEDA, OpenCost, Kepler Operator, Scaphandre, KubeGreen, Carbon Intensity Exporter, Cloud Carbon Footprint, Green Metrics Tool, and CodeCarbon with individual toggles for selective component deployment.
 
@@ -6,18 +6,57 @@ Comprehensive Terraform module for deploying a complete green operations monitor
 
 The GreenOps Module provides a unified way to deploy and manage:
 
-- **Prometheus** - Metrics collection and storage with `kube-prometheus-stack`
-- **KEDA** - Kubernetes Event Driven Autoscaling with optional example deployments
-- **OpenCost** - Cost monitoring and allocation with carbon cost tracking
-- **Kepler** - Environmental impact tracking via the Kepler Operator with optional power monitoring
-- **Scaphandre** - Container-level power consumption monitoring
-- **KubeGreen** - Automated resource cleanup and pod hibernation for cost optimisation
-- **Carbon Intensity Exporter** - Grid carbon intensity metrics for location-aware scheduling
-- **Cloud Carbon Footprint** - Cloud infrastructure carbon emissions tracking
-- **Green Metrics Tool** - Software carbon footprint measurement and optimization
-- **CodeCarbon** - Python code carbon emissions tracking
+- **Observability & Scaling Infrastructure**:
+  - **Prometheus** - Metrics collection and storage with `kube-prometheus-stack`
+  - **KEDA** - Kubernetes Event Driven Autoscaling with optional example deployments
+- **Cost & Resource Efficiency**:
+  - **OpenCost** - Cost monitoring and allocation with carbon cost tracking
+- **Energy & Power Monitoring**:
+  - **Kepler** - Environmental impact tracking via the Kepler Operator with optional power monitoring
+  - **Scaphandre** - Container-level power consumption monitoring
+- **Carbon & Emissions Estimation**:
+  - **Carbon Intensity Exporter** - Grid carbon intensity metrics for location-aware scheduling
+  - **Cloud Carbon Footprint** - Cloud infrastructure carbon emissions tracking
+  - **CodeCarbon** - Python code carbon emissions tracking
+- **Sustainability Optimisation & Automation**:
+  - **KubeGreen** - Automated resource cleanup and pod hibernation for cost optimisation
+  - **Green Metrics Tool** - Software carbon footprint measurement and optimisation
 
 All components are **enabled by default** and can be selectively disabled based on your requirements.
+
+## Why This Matters
+
+Sustainable computing is no longer just about hardware—it's about how software consumes resources. **GreenOps** sits at the intersection of FinOps and DevOps, enabling you to:
+
+- 👁️ **Observe**: Gain visibility into the real-time energy and carbon footprint of your clusters (Kepler, Scaphandre).
+- 📉 **Optimise**: Automatically reduce waste by scaling down idle resources (KEDA) and hibernating non-production environments (KubeGreen).
+- 💰 **Attribute**: Connect carbon emissions directly to financial costs for better accountability (OpenCost).
+- 🧪 **Measure**: Quantify the environmental impact of your software code (Green Metrics Tool, CodeCarbon).
+
+Efficient infrastructure is **cheaper, faster, and greener**.
+
+## Easy to Adopt
+
+- 🚀 **Unified Deployment**: Manage 10+ sustainability tools with a single Terraform module, no "dependency hell."
+- 🎛️ **Simple Configuration**: Toggles for every component mean you can start small (e.g., just Prometheus + OpenCost) and expand later.
+- 🔄 **Standard Interfaces**: Built on top of Cloud Native standards (Prometheus, Grafana, Helm), integrating seamlessly with your existing stack.
+- 🛡️ **Non-Intrusive**: Most components run as sidecars, daemonsets, or operators without requiring changes to your application code.
+
+## Environmental Impact in Practice
+
+### What This Stack Optimises
+
+- **Idle Resource Waste**: Automatically shut down development and testing environments off-hours with KubeGreen.
+- **Over-Provisioning**: Use real-time metrics to right-size workloads and infrastructure.
+- **Energy Transparency**: Shift from "estimated" to "measured" energy usage for accurate ESG reporting.
+- **Carbon-cost Trade-offs**: Make informed decisions balancing performance, cost, and carbon footprint.
+
+### What It Does Not Do (By Default)
+
+- ❌ **Rewrite your application**: It provides the data (CodeCarbon, Green Metrics Tool) to identify inefficient code, but the fix is up to you.
+- ❌ **Compromise availability**: Optimisation tools like KubeGreen are strictly opt-in and configurable per-namespace.
+
+This module provides the **foundation and tooling** to practice GreenOps effectively.
 
 ## Features
 
@@ -74,7 +113,7 @@ module "greenops" {
 }
 ```
 
-All ten components (Prometheus, KEDA, OpenCost, Kepler, Scaphandre, KubeGreen, Carbon Intensity Exporter, Cloud Carbon Footprint, Green Metrics Tool, and CodeCarbon) are **enabled by default**.
+All ten components are **enabled by default** and can be selectively disabled based on your requirements.
 
 ### Disable Specific Components
 
@@ -82,28 +121,34 @@ All ten components (Prometheus, KEDA, OpenCost, Kepler, Scaphandre, KubeGreen, C
 module "greenops" {
   source = "fabiocicerchia/greenops/kubernetes"
 
-  prometheus = {
-    enabled = true
+  observability = {
+    prometheus = {
+      enabled = true
+    }
+    keda = {
+      enabled = false
+    }
   }
 
-  keda = {
-    enabled = false  # Disable KEDA
+  cost_efficiency = {
+    opencost = {
+      enabled = true
+    }
   }
 
-  opencost = {
-    enabled = true
+  energy_power = {
+    kepler = {
+      enabled = true
+    }
+    scaphandre = {
+      enabled = false
+    }
   }
 
-  kepler = {
-    enabled = true
-  }
-
-  scaphandre = {
-    enabled = false  # Disable Scaphandre
-  }
-
-  kubegreen = {
-    enabled = true
+  sustainability_optimisation = {
+    kubegreen = {
+      enabled = true
+    }
   }
 }
 ```
@@ -114,41 +159,46 @@ module "greenops" {
 module "greenops" {
   source = "fabiocicerchia/greenops/kubernetes"
 
-  prometheus = {
-    enabled      = true
-    namespace    = "custom-monitoring"
-    release_name = "prom"
-    values = {
-      prometheus = {
-        prometheusSpec = {
-          retention = "30d"
+  observability = {
+    prometheus = {
+      enabled      = true
+      namespace    = "custom-monitoring"
+      release_name = "prom"
+      values = {
+        prometheus = {
+          prometheusSpec = {
+            retention = "30d"
+          }
+        }
+      }
+    }
+    keda = {
+      enabled        = true
+      namespace      = "custom-keda"
+      deploy_example = false
+      values         = {}
+    }
+  }
+
+  cost_efficiency = {
+    opencost = {
+      enabled = true
+      values = {
+        opencost = {
+          carbonCost = {
+            enabled = true
+          }
         }
       }
     }
   }
 
-  keda = {
-    enabled        = true
-    namespace      = "custom-keda"
-    deploy_example = false
-    values         = {}
-  }
-
-  opencost = {
-    enabled = true
-    values = {
-      opencost = {
-        carbonCost = {
-          enabled = true
-        }
-      }
+  energy_power = {
+    kepler = {
+      enabled             = true
+      namespace           = "sustainability"
+      deploy_powermonitor = true
     }
-  }
-
-  kepler = {
-    enabled             = true
-    namespace           = "sustainability"
-    deploy_powermonitor = true
   }
 }
 ```
@@ -157,248 +207,216 @@ module "greenops" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| prometheus | Prometheus module configuration | `object({...})` | `{ enabled = true, ... }` | no |
-| keda | KEDA module configuration | `object({...})` | `{ enabled = true, ... }` | no |
-| opencost | OpenCost module configuration | `object({...})` | `{ enabled = true, ... }` | no |
-| kepler | Kepler module configuration | `object({...})` | `{ enabled = true, ... }` | no |
-| scaphandre | Scaphandre module configuration | `object({...})` | `{ enabled = true, ... }` | no |
-| kubegreen | KubeGreen module configuration | `object({...})` | `{ enabled = true, ... }` | no |
-| carbon_intensity_exporter | Carbon Intensity Exporter module configuration | `object({...})` | `{ enabled = true, ... }` | no |
-| cloud_carbon_footprint | Cloud Carbon Footprint module configuration | `object({...})` | `{ enabled = true, ... }` | no |
-| green_metrics_tool | Green Metrics Tool module configuration | `object({...})` | `{ enabled = true, ... }` | no |
-| codecarbon | CodeCarbon module configuration | `object({...})` | `{ enabled = true, ... }` | no |
+| observability | Observability and scaling tools (Prometheus, KEDA) | `object({...})` | `{}` | no |
+| cost_efficiency | Cost and resource efficiency tools (OpenCost) | `object({...})` | `{}` | no |
+| energy_power | Energy and power monitoring tools (Kepler, Scaphandre) | `object({...})` | `{}` | no |
+| carbon_emissions | Carbon and emissions estimation tools (IE, CCF, CodeCarbon) | `object({...})` | `{}` | no |
+| sustainability_optimisation | Sustainability optimisation tools (KubeGreen, Green Metrics Tool) | `object({...})` | `{}` | no |
 
 ### Detailed Input Schema
 
-#### prometheus
+#### observability
 ```hcl
-prometheus = {
-  enabled      = bool                    # Enable Prometheus (default: true)
-  release_name = string                  # Helm release name (default: "prometheus-community")
-  namespace    = string                  # Kubernetes namespace (default: "monitoring")
-  values       = any                     # Helm chart values (default: {...})
+observability = {
+  prometheus = optional(object({
+    enabled       = bool                    # Enable Prometheus (default: true)
+    release_name  = optional(string)        # Helm release name
+    namespace     = optional(string)        # Kubernetes namespace
+    values        = optional(any)           # Helm chart values
+    chart_version = optional(string)        # Helm chart version
+  }))
+  keda = optional(object({
+    enabled        = bool                   # Enable KEDA (default: true)
+    release_name   = optional(string)       # Helm release name
+    namespace      = optional(string)       # Kubernetes namespace
+    values         = optional(any)          # Helm chart values
+    deploy_example = optional(bool)         # Deploy example manifests
+    manifest_path  = optional(string)       # Path to example manifest
+    chart_version  = optional(string)       # Helm chart version
+  }))
 }
 ```
 
-#### keda
+#### cost_efficiency
 ```hcl
-keda = {
-  enabled        = bool                  # Enable KEDA (default: true)
-  release_name   = string                # Helm release name (default: "kedacore")
-  namespace      = string                # Kubernetes namespace (default: "keda")
-  values         = any                   # Helm chart values (default: {})
-  deploy_example = bool                  # Deploy example manifests (default: true)
-  manifest_path  = string                # Path to example manifest (default: "keda.yaml")
+cost_efficiency = {
+  opencost = optional(object({
+    enabled       = bool                    # Enable OpenCost (default: true)
+    release_name  = optional(string)        # Helm release name
+    namespace     = optional(string)        # Kubernetes namespace
+    values        = optional(any)           # Helm chart values
+    chart_version = optional(string)        # Helm chart version
+  }))
 }
 ```
 
-#### opencost
+#### energy_power
 ```hcl
-opencost = {
-  enabled      = bool                    # Enable OpenCost (default: true)
-  release_name = string                  # Helm release name (default: "opencost-charts")
-  namespace    = string                  # Kubernetes namespace (default: "opencost")
-  values       = any                     # Helm chart values (default: {...})
+energy_power = {
+  kepler = optional(object({
+    enabled             = bool              # Enable Kepler (default: true)
+    release_name        = optional(string)  # Helm release name
+    namespace           = optional(string)  # Kubernetes namespace
+    values              = optional(any)     # Helm chart values
+    deploy_powermonitor = optional(bool)    # Deploy PowerMonitor
+    chart_version       = optional(string)  # Helm chart version
+  }))
+  scaphandre = optional(object({
+    enabled       = bool                    # Enable Scaphandre (default: true)
+    release_name  = optional(string)        # Helm release name
+    namespace     = optional(string)        # Kubernetes namespace
+    values        = optional(any)           # Helm chart values
+    chart_version = optional(string)        # Helm chart version
+  }))
 }
 ```
 
-#### kepler
+#### carbon_emissions
 ```hcl
-kepler = {
-  enabled             = bool             # Enable Kepler (default: true)
-  release_name        = string           # Helm release name (default: "kepler-operator")
-  namespace           = string           # Kubernetes namespace (default: "kepler-operator")
-  values              = any              # Helm chart values (default: {...})
-  deploy_powermonitor = bool             # Deploy PowerMonitor (default: true)
+carbon_emissions = {
+  carbon_intensity_exporter = optional(object({
+    enabled       = bool                    # Enable Carbon Intensity Exporter (default: true)
+    release_name  = optional(string)        # Helm release name
+    namespace     = optional(string)        # Kubernetes namespace
+    values        = optional(any)           # Helm chart values
+    chart_version = optional(string)        # Helm chart version
+  }))
+  cloud_carbon_footprint = optional(object({
+    enabled       = bool                    # Enable Cloud Carbon Footprint (default: true)
+    release_name  = optional(string)        # Helm release name
+    namespace     = optional(string)        # Kubernetes namespace
+    values        = optional(any)           # Helm chart values
+    chart_version = optional(string)        # Helm chart version
+  }))
+  codecarbon = optional(object({
+    enabled         = bool                  # Enable CodeCarbon (default: true)
+    name            = optional(string)      # Release name
+    namespace       = optional(string)      # Kubernetes namespace
+    image           = optional(string)      # Docker image
+    api_endpoint    = optional(string)      # CodeCarbon API endpoint
+    organization_id = optional(string)      # Organization ID
+    project_id      = optional(string)      # Project ID
+    experiment_id   = optional(string)      # Experiment ID
+    api_key         = optional(string)      # API Key
+  }))
 }
 ```
 
-#### scaphandre
-```hcl = bool                    # Enable Scaphandre (default: true)
-  release_name  = string                  # Helm release name (default: "scaphandre")
-  namespace     = string                  # Kubernetes namespace (default: "scaphandre")
-  values        = any                     # Helm chart values (default: {})
-  chart_version = string                  # Helm chart version (default: "" for latest)
-}
-```
-
-#### kubegreen
+#### sustainability_optimisation
 ```hcl
-kubegreen = {
-  enabled       = bool                    # Enable KubeGreen (default: true)
-  release_name  = string                  # Helm release name (default: "kube-green")
-  namespace     = string                  # Kubernetes namespace (default: "kube-green")
-  values        = any                     # Helm chart values (default: {})
-  chart_version = string                  # Helm chart version (default: "" for latest)
-}
-```
-
-#### carbon_intensity_exporter
-```hcl
-carbon_intensity_exporter = {
-  enabled       = bool                    # Enable Carbon Intensity Exporter (default: true)
-  release_name  = string                  # Helm release name (default: "carbon-intensity-exporter")
-  namespace     = string                  # Kubernetes namespace (default: "carbon-intensity-exporter")
-  values        = any                     # Helm chart values (default: {})
-  chart_version = string                  # Helm chart version (default: "" for latest)
-}
-```
-
-#### cloud_carbon_footprint
-```hcl
-cloud_carbon_footprint = {
-  enabled       = bool                    # Enable Cloud Carbon Footprint (default: true)
-  release_name  = string                  # Helm release name (default: "cloud-carbon-footprint")
-  namespace     = string                  # Kubernetes namespace (default: "cloud-carbon-footprint")
-  values        = any                     # Helm chart values (default: {})
-  chart_version = string                  # Helm chart version (default: "" for latest)
-}
-```
-
-#### green_metrics_tool
-```hcl
-green_metrics_tool = {
-  enabled       = bool                    # Enable Green Metrics Tool (default: true)
-  release_name  = string                  # Helm release name (default: "green-metrics-tool")
-  namespace     = string                  # Kubernetes namespace (default: "green-metrics-tool")
-  values        = any                     # Helm chart values (default: {})
-  chart_version = string                  # Helm chart version (default: "" for latest)
-}
-```
-
-#### codecarbon
-```hcl
-codecarbon = {
-  enabled       = bool                    # Enable CodeCarbon (default: true)
-  release_name  = string                  # Helm release name (default: "codecarbon")
-  namespace     = string                  # Kubernetes namespace (default: "codecarbon")
-  values        = any                     # Helm chart values (default: {})
-  chart_version = string                  # Helm chart version (default: "" for latest)
+sustainability_optimisation = {
+  kubegreen = optional(object({
+    enabled       = bool                    # Enable KubeGreen (default: true)
+    release_name  = optional(string)        # Helm release name
+    namespace     = optional(string)        # Kubernetes namespace
+    values        = optional(any)           # Helm chart values
+    chart_version = optional(string)        # Helm chart version
+  }))
+  green_metrics_tool = optional(object({
+    enabled           = bool                # Enable Green Metrics Tool (default: true)
+    release_name      = optional(string)    # Helm release name
+    namespace         = optional(string)    # Kubernetes namespace
+    values            = optional(any)       # Helm chart values
+    chart_version     = optional(string)    # Helm chart version
+    postgres_password = optional(string)    # PostgreSQL password
+  }))
 }
 ```
 
 #### Chart Version Management
 
-All modules support `chart_version` parameter:
-- **Empty string (`""`)** - Deploy with the latest available Helm chart version (default)
-- **Specific version** - Pin to an exact version (e.g., `"50.0.0"`)
+All modules support `chart_version` parameter within their respective configuration blocks.
+If set to `""` (empty string) or omitted, it will deploy the latest available Helm chart version.
 
-Example:
-```hcl
-prometheus = {
-  enabled       = true
-  chart_version = "55.0.0"  # Pin to specific version
-}
-
-keda = {
-  enabled       = true
-  chart_version = ""        # Use latest (defaultube-green")
-  namespace    = string                  # Kubernetes namespace (default: "kube-green")
-  values       = any                     # Helm chart values (default: {})
-}
-```
 
 ## Outputs
 
 The module provides outputs organised in nested objects for better structure:
 
-### prometheus
-Prometheus module outputs (if enabled):
+### observability
+Observability and scaling outputs:
 ```hcl
-prometheus = {
-  namespace    = string  # Kubernetes namespace where Prometheus is deployed
-  release_name = string  # Helm release name of Prometheus
-  version      = string  # Chart version deployed
+observability = {
+  prometheus = {
+    namespace    = string
+    release_name = string
+    version      = string
+  }
+  keda = {
+    namespace    = string
+    release_name = string
+    version      = string
+  }
 }
 ```
 
-### keda
-KEDA module outputs (if enabled):
+### cost_efficiency
+Cost and resource efficiency outputs:
 ```hcl
-keda = {
-  namespace    = string  # Kubernetes namespace where KEDA is deployed
-  release_name = string  # Helm release name of KEDA
-  version      = string  # Chart version deployed
+cost_efficiency = {
+  opencost = {
+    namespace    = string
+    release_name = string
+    version      = string
+  }
 }
 ```
 
-### opencost
-OpenCost module outputs (if enabled):
+### energy_power
+Energy and power monitoring outputs:
 ```hcl
-opencost = {
-  namespace    = string  # Kubernetes namespace where OpenCost is deployed
-  release_name = string  # Helm release name of OpenCost
-  version      = string  # Chart version deployed
+energy_power = {
+  kepler = {
+    namespace    = string
+    release_name = string
+    version      = string
+  }
+  scaphandre = {
+    namespace    = string
+    release_name = string
+    version      = string
+  }
 }
 ```
 
-### kepler
-Kepler module outputs (if enabled):
+### sustainability_optimisation
+Sustainability optimisation outputs:
 ```hcl
-kepler = {
-  namespace    = string  # Kubernetes namespace where Kepler is deployed
-  release_name = string  # Helm release name of Kepler
-  version      = string  # Chart version deployed
+sustainability_optimisation = {
+  kubegreen = {
+    namespace    = string
+    release_name = string
+    version      = string
+  }
+  green_metrics_tool = {
+    namespace    = string
+    release_name = string
+    version      = string
+  }
 }
 ```
 
-### scaphandre
-Scaphandre module outputs (if enabled):
+### carbon_emissions
+Carbon and emissions estimation outputs:
 ```hcl
-scaphandre = {
-  namespace    = string  # Kubernetes namespace where Scaphandre is deployed
-  release_name = string  # Helm release name of Scaphandre
-  version      = string  # Chart version deployed
-}
-```
-
-### kubegreen
-KubeGreen module outputs (if enabled):
-```hcl
-kubegreen = {
-  namespace    = string  # Kubernetes namespace where KubeGreen is deployed
-  release_name = string  # Helm release name of KubeGreen
-  version      = string  # Chart version deployed
-}
-```
-
-### carbon_intensity_exporter
-Carbon Intensity Exporter module outputs (if enabled):
-```hcl
-carbon_intensity_exporter = {
-  namespace    = string  # Kubernetes namespace where Carbon Intensity Exporter is deployed
-  release_name = string  # Helm release name of Carbon Intensity Exporter
-  version      = string  # Chart version deployed
-}
-```
-
-### cloud_carbon_footprint
-Cloud Carbon Footprint module outputs (if enabled):
-```hcl
-cloud_carbon_footprint = {
-  namespace    = string  # Kubernetes namespace where Cloud Carbon Footprint is deployed
-  release_name = string  # Helm release name of Cloud Carbon Footprint
-  version      = string  # Chart version deployed
-}
-```
-
-### green_metrics_tool
-Green Metrics Tool module outputs (if enabled):
-```hcl
-green_metrics_tool = {
-  namespace    = string  # Kubernetes namespace where Green Metrics Tool is deployed
-  release_name = string  # Helm release name of Green Metrics Tool
-  version      = string  # Chart version deployed
-}
-```
-
-### codecarbon
-CodeCarbon module outputs (if enabled):
-```hcl
-codecarbon = {
-  namespace    = string  # Kubernetes namespace where CodeCarbon is deployed
-  release_name = string  # Helm release name of CodeCarbon
-  version      = string  # Chart version deployed
+carbon_emissions = {
+  carbon_intensity_exporter = {
+    namespace    = string
+    release_name = string
+    version      = string
+  }
+  cloud_carbon_footprint = {
+    namespace          = string
+    release_name       = string
+    version            = string
+    client_service_url = string
+    api_service_url    = string
+  }
+  codecarbon = {
+    namespace    = string
+    release_name = string
+    version      = string
+  }
 }
 ```
 
@@ -406,16 +424,26 @@ codecarbon = {
 Map showing which components are enabled:
 ```hcl
 deployed_components = {
-  prometheus                = bool  # true if Prometheus is enabled
-  keda                      = bool  # true if KEDA is enabled
-  opencost                  = bool  # true if OpenCost is enabled
-  kepler                    = bool  # true if Kepler is enabled
-  scaphandre                = bool  # true if Scaphandre is enabled
-  kubegreen                 = bool  # true if KubeGreen is enabled
-  carbon_intensity_exporter = bool  # true if Carbon Intensity Exporter is enabled
-  cloud_carbon_footprint    = bool  # true if Cloud Carbon Footprint is enabled
-  green_metrics_tool        = bool  # true if Green Metrics Tool is enabled
-  codecarbon                = bool  # true if CodeCarbon is enabled
+  observability = {
+    prometheus = bool
+    keda       = bool
+  }
+  cost_efficiency = {
+    opencost = bool
+  }
+  energy_power = {
+    kepler     = bool
+    scaphandre = bool
+  }
+  sustainability_optimisation = {
+    kubegreen          = bool
+    green_metrics_tool = bool
+  }
+  carbon_emissions = {
+    carbon_intensity_exporter = bool
+    cloud_carbon_footprint    = bool
+    codecarbon                = bool
+  }
 }
 ```
 
@@ -429,10 +457,16 @@ Only enable Prometheus for basic monitoring:
 module "greenops" {
   source = "fabiocicerchia/greenops/kubernetes"
 
-  prometheus = { enabled = true }
-  keda       = { enabled = false }
-  opencost   = { enabled = false }
-  kepler     = { enabled = false }
+  observability = {
+    prometheus = { enabled = true }
+    keda       = { enabled = false }
+  }
+  cost_efficiency = {
+    opencost = { enabled = false }
+  }
+  energy_power = {
+    kepler     = { enabled = false }
+  }
 }
 ```
 
@@ -444,8 +478,12 @@ Enable Prometheus and OpenCost for cost visibility:
 module "greenops" {
   source = "fabiocicerchia/greenops/kubernetes"
 
-  prometheus = { enabled = true }
-  opencost   = { enabled = true }
+  observability = {
+    prometheus = { enabled = true }
+  }
+  cost_efficiency = {
+    opencost   = { enabled = true }
+  }
 }
 ```
 
@@ -458,40 +496,46 @@ module "greenops" {
   source = "fabiocicerchia/greenops/kubernetes"
 
   # All enabled by default, just provide custom values if needed
-  prometheus = {
-    enabled = true
+  observability = {
+    prometheus = {
+      enabled = true
+    }
   }
 
-  opencost = {
-    enabled = true
+  cost_efficiency = {
+    opencost = {
+      enabled = true
+    }
   }
 
-  kepler = {
-    enabled = true
+  energy_power = {
+    kepler = {
+      enabled = true
+    }
+    scaphandre = {
+      enabled = true  # Enable for container-level power monitoring
+    }
   }
 
-  scaphandre = {
-    enabled = true  # Enable for container-level power monitoring
+  sustainability_optimisation = {
+    kubegreen = {
+      enabled = true  # Enable for resource cleanup and pod hibernation
+    }
+    green_metrics_tool = {
+      enabled = true  # Enable for software carbon footprint measurement
+    }
   }
 
-  kubegreen = {
-    enabled = true  # Enable for resource cleanup and pod hibernation
-  }
-
-  carbon_intensity_exporter = {
-    enabled = true  # Enable for grid carbon intensity metrics
-  }
-
-  cloud_carbon_footprint = {
-    enabled = true  # Enable for cloud infrastructure carbon tracking
-  }
-
-  green_metrics_tool = {
-    enabled = true  # Enable for software carbon footprint measurement
-  }
-
-  codecarbon = {
-    enabled = true  # Enable for Python code carbon emissions tracking
+  carbon_emissions = {
+    carbon_intensity_exporter = {
+      enabled = true  # Enable for grid carbon intensity metrics
+    }
+    cloud_carbon_footprint = {
+      enabled = true  # Enable for cloud infrastructure carbon tracking
+    }
+    codecarbon = {
+      enabled = true  # Enable for Python code carbon emissions tracking
+    }
   }
 }
 ```
