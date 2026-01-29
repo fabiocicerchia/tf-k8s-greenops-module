@@ -1,0 +1,36 @@
+# https://raw.githubusercontent.com/sustainable-computing-io/kepler-operator/v1alpha1/config/samples/kepler.system_v1alpha1_powermonitor.yaml
+
+apiVersion: kepler.system.sustainable.computing.io/v1alpha1
+kind: PowerMonitor
+metadata:
+  labels:
+    app.kubernetes.io/name: powermonitor
+    app.kubernetes.io/instance: powermonitor
+    app.kubernetes.io/part-of: kepler-operator
+  name: power-monitor
+spec:
+  kepler:
+    config:
+      logLevel: info
+      metricLevels:
+      - node      # Node-level power consumption (recommended)
+      - pod       # Pod-level power consumption (recommended)
+      - vm        # Virtual machine power consumption
+      - process   # Process-level power consumption (high overhead)
+      - container # Container-level power consumption (high overhead)
+    deployment:
+      security:
+        mode: none
+      # secrets:
+      #   - name: my-tls-secret
+      #     mountPath: /etc/kepler/secrets/tls
+      #     readOnly: true
+      #   - name: my-config-secret
+      #     mountPath: /opt/secrets/config
+      #     readOnly: true
+      #
+      # CAUTION: Avoid mounting to critical paths like:
+      # - /etc/kepler (reserved for Kepler config)
+      # - /sys, /proc, /dev (system directories)
+      # - /usr, /bin, /sbin, /lib (system binaries)
+      # - / (root filesystem)
