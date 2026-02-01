@@ -49,8 +49,8 @@ variable "kubectl_context" {
 }
 
 provider "helm" {
-  kubernetes {
-    config_path    = "~/.kube/config"
+  kubernetes = {
+    config_path = "~/.kube/config"
     config_context = var.kubectl_context
   }
 }
@@ -61,19 +61,12 @@ provider "kubectl" {
 }
 
 module "greenops_observe" {
-  source = "fabiocicerchia/greenops/kubernetes"
+  source = "../"
 
   providers = {
     helm    = helm
     kubectl = kubectl
   }
-
-  # Pass kubectl context to the module
-  # Uncomment and set to your cluster name for protection:
-  # cluster_safety = {
-  #   require_cluster_name = "dev-cluster-1"  # Get with: kubectl config view --minify -o jsonpath='{.clusters[0].name}'
-  #   confirm_deployment   = true             # Shows cluster info before deployment (default: true)
-  # }
 
   # Core observability - enabled by default
   observability = {

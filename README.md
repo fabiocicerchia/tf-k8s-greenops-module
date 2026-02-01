@@ -273,7 +273,6 @@ module "greenops" {
     kepler = {
       enabled             = true
       namespace           = "sustainability"
-      deploy_powermonitor = true
     }
   }
 }
@@ -332,12 +331,11 @@ cost_efficiency = {
 ```hcl
 energy_power = {
   kepler = optional(object({
-    enabled             = bool              # Enable Kepler (default: true)
-    release_name        = optional(string)  # Helm release name
-    namespace           = optional(string)  # Kubernetes namespace
-    values              = optional(any)     # Helm chart values
-    deploy_powermonitor = optional(bool)    # Deploy PowerMonitor
-    chart_version       = optional(string)  # Helm chart version
+    enabled       = bool              # Enable Kepler (default: true)
+    release_name  = optional(string)  # Helm release name
+    namespace     = optional(string)  # Kubernetes namespace
+    values        = optional(any)     # Helm chart values
+    chart_version = optional(string)  # Helm chart version
   }))
   scaphandre = optional(object({
     enabled       = bool                    # Enable Scaphandre (default: true)

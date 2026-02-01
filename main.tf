@@ -54,7 +54,6 @@ module "kepler" {
   namespace           = var.energy_power.kepler.namespace
   values              = var.energy_power.kepler.values
   chart_version       = var.energy_power.kepler.chart_version
-  deploy_powermonitor = var.energy_power.kepler.deploy_powermonitor
 }
 
 module "scaphandre" {

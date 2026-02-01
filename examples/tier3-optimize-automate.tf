@@ -53,7 +53,7 @@ variable "kubectl_context" {
 }
 
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     config_path    = "~/.kube/config"
     config_context = var.kubectl_context
   }
@@ -65,7 +65,7 @@ provider "kubectl" {
 }
 
 module "greenops_optimize" {
-  source = "fabiocicerchia/greenops/kubernetes"
+  source = "../"
 
   providers = {
     helm    = helm

@@ -71,7 +71,6 @@ variable "energy_power" {
       namespace           = optional(string, "kepler-operator")
       values              = optional(any, {})
       chart_version       = optional(string, "")
-      deploy_powermonitor = optional(bool, true)
     }), { enabled = true }) # Enabled by default - core GreenOps observability
     scaphandre = optional(object({
       enabled       = bool

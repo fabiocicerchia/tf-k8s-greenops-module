@@ -21,21 +21,30 @@ terraform {
   }
 }
 
+locals {
+  config_path           = "~/.kube/config"
+  config_context        = "minikube"
+  demo_app_manifest     = "https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/refs/heads/main/release/kubernetes-manifests.yaml"
+  cert_manager_manifest = "https://github.com/cert-manager/cert-manager/releases/download/v1.18.2/cert-manager.yaml"
+}
+
 provider "helm" {
   kubernetes = {
-    config_path = "~/.kube/config"
+    config_path    = local.config_path
+    config_context = local.config_context
   }
 }
 
 provider "kubectl" {
-  config_path = "~/.kube/config"
+  config_path    = local.config_path
+  config_context = local.config_context
 }
 
 ### CERT-MANAGER INSTALLATION ###
 
 resource "null_resource" "deploy_cert_manager" {
   provisioner "local-exec" {
-    command = "KUBECONFIG=~/.kube/config kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.18.2/cert-manager.yaml"
+    command = "KUBECONFIG=${local.config_path} kubectl --context ${local.config_context} apply -f ${local.cert_manager_manifest}"
   }
 }
 
@@ -66,7 +75,7 @@ module "greenops" {
       }
     }
     keda = {
-      enabled        = true
+      enabled = true
       # https://github.com/kedacore/charts/blob/main/keda/values.yaml
       values = {}
     }
@@ -74,7 +83,7 @@ module "greenops" {
 
   cost_efficiency = {
     opencost = {
-      enabled       = true
+      enabled = true
       # https://github.com/opencost/opencost-helm-chart/blob/main/charts/opencost/values.yaml
       values = {
         opencost = {
@@ -95,7 +104,7 @@ module "greenops" {
 
   energy_power = {
     kepler = {
-      enabled             = true
+      enabled = true
       # https://github.com/sustainable-computing-io/kepler/blob/main/manifests/helm/kepler/values.yaml
       # https://github.com/sustainable-computing-io/kepler/blob/main/docs/user/configuration.md
       values = {
@@ -105,7 +114,7 @@ module "greenops" {
       }
     }
     scaphandre = {
-      enabled       = true
+      enabled = true
       # https://github.com/hubblo-org/scaphandre/blob/main/helm/scaphandre/values.yaml
       values = {
         serviceMonitor = {
@@ -117,7 +126,7 @@ module "greenops" {
 
   sustainability_optimisation = {
     kubegreen = {
-      enabled       = true
+      enabled = true
       # https://github.com/kube-green/kube-green/blob/main/charts/kube-green/values.yaml
       # https://kube-green.github.io/
       values = {}
@@ -126,7 +135,7 @@ module "greenops" {
 
   carbon_emissions = {
     carbon_intensity_exporter = {
-      enabled       = true
+      enabled = true
       # https://github.com/Azure/kubernetes-carbon-intensity-exporter/blob/main/charts/carbon-intensity-exporter/values.yaml
       values = {
         providerName = "WattTime"
@@ -137,7 +146,7 @@ module "greenops" {
       }
     }
     cloud_carbon_footprint = {
-      enabled       = true
+      enabled = true
       # https://github.com/cloud-carbon-footprint/cloud-carbon-footprint/blob/trunk/helm/charts/cloud-carbon-footprint/values.yaml
       values = {}
     }
@@ -154,7 +163,7 @@ module "greenops" {
 ### CUSTOM SETTINGS OR ADDITIONAL RESOURCES ###
 
 data "kubectl_path_documents" "extras" {
-    pattern = "./*.yaml"
+  pattern = "./*.yaml"
 }
 resource "kubectl_manifest" "extras" {
   for_each  = data.kubectl_path_documents.extras.manifests
@@ -164,10 +173,10 @@ resource "kubectl_manifest" "extras" {
 ### DEMO APPLICATION DEPLOYMENT ###
 
 data "http" "demo_app" {
-  url = "https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/refs/heads/main/release/kubernetes-manifests.yaml"
+  url = local.demo_app_manifest
 }
 data "kubectl_file_documents" "demo_app" {
-    content = data.http.demo_app.response_body
+  content = data.http.demo_app.response_body
 }
 resource "kubectl_manifest" "demo_app" {
   for_each  = data.kubectl_file_documents.demo_app.manifests
